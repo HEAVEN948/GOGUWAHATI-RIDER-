@@ -316,7 +316,13 @@ function switchTab(tab) {
 // ================= HOME =================
 function renderHome() {
   if (!authReady) { heroStatus.textContent = 'Connecting…'; return; }
-  if (!riderProfile) { heroStatus.textContent = 'Loading…'; return; }
+
+  if (!riderProfile) {
+    heroStatus.textContent = 'Almost there!';
+    heroSub.textContent = 'Complete your profile to continue';
+    renderCompleteProfileForm();
+    return;
+  }
 
   if (isBlocked()) {
     heroStatus.textContent = 'Account Suspended';
@@ -333,6 +339,24 @@ function renderHome() {
   heroStatus.textContent = 'Where to?';
   heroSub.textContent = 'Book a ride in a few taps';
   renderBookingForm();
+}
+
+function renderCompleteProfileForm() {
+  tabHome.innerHTML = `
+    <div class="card">
+      <label>Full Name</label>
+      <input id="fixName" type="text" placeholder="Your name">
+      <label>Phone / WhatsApp Number</label>
+      <input id="fixPhone" type="tel" placeholder="e.g. 91XXXXXXXXXX">
+      <button class="pill-btn btn-purple" style="margin-top:18px;" id="btnFixProfile">Continue</button>
+    </div>
+  `;
+  document.getElementById('btnFixProfile').addEventListener('click', () => {
+    const name = document.getElementById('fixName').value.trim();
+    const phone = document.getElementById('fixPhone').value.trim();
+    if (!name || !phone) { alert('Please fill in both fields.'); return; }
+    db.ref('riders/' + riderId).set({ name, phone, registeredAt: Date.now() });
+  });
 }
 
 function renderBlockedScreen() {
