@@ -244,6 +244,11 @@ let destMapInstance = null;
 let destMarker = null;
 let lastKnownRideStatus = null; // used to detect the accepted -> in_progress transition (driver arrived & picked up)
 
+// Mappls (MapmyIndia) REST API key — used for address autocomplete since it
+// has much better coverage of small Indian places (schools, shops, local
+// landmarks) than OpenStreetMap. Domain-restricted to heaven948.github.io.
+const MAPPLS_KEY = "zhxouvfqxyblexundbqpmktyrpcpgemybzfx";
+
 // ================= APP THEME (rider-chosen, saved locally on this device) =================
 const THEMES = {
   purple: { purple:'#6D3FC7', purpleDeep:'#241436', purpleLight:'#9B7FE8', gold:'#F2B705', river:'#3E8FB0', bg:'#F7F5FC' },
@@ -490,6 +495,7 @@ function renderBookingForm() {
       </div>
 
       <button class="pill-btn btn-purple" style="margin-top:18px;" id="btnBook">Book Ride</button>
+      <div style="text-align:center; font-size:11px; color:#aaa; margin-top:10px;">Address search powered by Mappls</div>
     </div>
   `;
 
@@ -532,23 +538,60 @@ function renderBookingForm() {
   document.getElementById('btnBook').addEventListener('click', () => { unlockAudio(); submitRequest(); });
 }
 
-// Live address search uses Photon (by Komoot) — a free, no-key geocoder
-// built specifically for autocomplete/typeahead. (Nominatim's own usage
-// policy asks apps NOT to hit it on every keystroke — doing so is what was
-// causing suggestions to silently fail or come back empty. Nominatim is
-// still used elsewhere, just for one-off reverse lookups like GPS/map-tap,
-// which is what it's meant for.)
+// Live address search tries Mappls (MapmyIndia) first — it has much deeper
+// coverage of small Indian places (local schools, shops, landmarks) than
+// OpenStreetMap. If the Mappls call fails for any reason (key/domain issue,
+// network error, unexpected response shape), it automatically falls back to
+// Photon so the search box keeps working for riders either way.
 function setupAddressSearch(inputId, resultsId, onSelect) {
   const input = document.getElementById(inputId);
   const resultsBox = document.getElementById(resultsId);
   let debounceTimer = null;
-  let activeToken = 0; // guards against a slow older request overwriting a newer one
+  let activeToken = 0;
 
-  function formatPhotonLabel(props) {
-    return [props.name, props.street, props.city || props.district, props.state, props.country]
-      .filter(Boolean)
-      .filter((v, i, arr) => arr.indexOf(v) === i) // drop duplicate consecutive parts
-      .join(', ');
+  function showResults(items, myToken) {
+    if (myToken !== activeToken) return;
+    if (items.length === 0) { resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`; return; }
+    resultsBox.innerHTML = items.map((it, i) => `<div class="search-result-item" data-idx="${i}">${it.label}</div>`).join('');
+    resultsBox.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const it = items[item.dataset.idx];
+        input.value = it.label;
+        resultsBox.style.display = 'none';
+        onSelect(it.lat, it.lon, it.label);
+      });
+    });
+  }
+
+  function searchMappls(query, myToken) {
+    return fetch(`https://apis.mappls.com/advancedmaps/v1/${MAPPLS_KEY}/search/json?query=${encodeURIComponent(query)}&region=IND`)
+      .then(r => { if (!r.ok) throw new Error('Mappls request failed'); return r.json(); })
+      .then(data => {
+        const raw = data.suggestedLocations || data.copResults || [];
+        if (!raw.length) throw new Error('No Mappls results');
+        const items = raw.map(loc => ({
+          label: loc.placeAddress || loc.placeName || loc.formattedAddress || '',
+          lat: parseFloat(loc.latitude),
+          lon: parseFloat(loc.longitude)
+        })).filter(it => it.label && !isNaN(it.lat) && !isNaN(it.lon));
+        if (!items.length) throw new Error('Unusable Mappls results');
+        showResults(items, myToken);
+      });
+  }
+
+  function searchPhoton(query, myToken) {
+    return fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lon=91.7362&lat=26.1445`)
+      .then(r => r.json())
+      .then(data => {
+        const features = (data && data.features) || [];
+        const items = features.map(f => ({
+          label: [f.properties.name, f.properties.street, f.properties.city || f.properties.district, f.properties.state, f.properties.country]
+            .filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i).join(', '),
+          lat: f.geometry.coordinates[1],
+          lon: f.geometry.coordinates[0]
+        }));
+        showResults(items, myToken);
+      });
   }
 
   input.addEventListener('input', () => {
@@ -559,36 +602,11 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
     resultsBox.innerHTML = `<div class="search-loading">Searching…</div>`;
     const myToken = ++activeToken;
     debounceTimer = setTimeout(() => {
-      // lat/lon here just bias results toward Guwahati; it doesn't restrict them.
-      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lon=91.7362&lat=26.1445`)
-        .then(r => r.json())
-        .then(data => {
-          if (myToken !== activeToken) return; // a newer keystroke already superseded this request
-          const features = (data && data.features) || [];
-          if (features.length === 0) {
-            resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`;
-            return;
-          }
-          resultsBox.innerHTML = features.map((f, i) => `<div class="search-result-item" data-idx="${i}">${formatPhotonLabel(f.properties)}</div>`).join('');
-          resultsBox.querySelectorAll('.search-result-item').forEach(item => {
-            item.addEventListener('click', () => {
-              const f = features[item.dataset.idx];
-              const label = formatPhotonLabel(f.properties);
-              const [lon, lat] = f.geometry.coordinates;
-              input.value = label;
-              resultsBox.style.display = 'none';
-              onSelect(lat, lon, label);
-            });
-          });
-        })
-        .catch(() => {
-          if (myToken !== activeToken) return;
-          resultsBox.innerHTML = `<div class="search-loading">Search failed — check your connection and try again</div>`;
-        });
+      searchMappls(query, myToken).catch(() => searchPhoton(query, myToken))
+        .catch(() => { if (myToken === activeToken) resultsBox.innerHTML = `<div class="search-loading">Search failed — check your connection and try again</div>`; });
     }, 350);
   });
 
-  // Hide dropdown when tapping elsewhere
   document.addEventListener('click', e => {
     if (e.target !== input) resultsBox.style.display = 'none';
   });
