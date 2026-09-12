@@ -63,6 +63,18 @@
   .loc-box .loc-value { font-size: 14px; font-weight: 600; }
   .loc-btn { margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 13px; background: #F0EBFA; color: var(--purple); }
 
+  /* ===== Address search (autocomplete dropdown) ===== */
+  .search-wrap { position: relative; }
+  .search-results {
+    position: absolute; left: 0; right: 0; top: 100%; background: #fff;
+    border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px;
+    max-height: 220px; overflow-y: auto; z-index: 50; box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  }
+  .search-result-item { padding: 11px 12px; font-size: 13px; border-bottom: 1px solid #f2f2f2; cursor: pointer; }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:active { background: #F0EBFA; }
+  .search-loading { padding: 10px 12px; font-size: 12px; color: #999; }
+
   #destMap { width: 100%; height: 240px; border-radius: 10px; margin: 8px 0; }
 
   .status-section { text-align: center; }
@@ -163,8 +175,8 @@
   <div class="hero-content">
     <div class="hero-top">
       <div class="brand-row">
-        <svg viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="var(--gold)"/><path d="M5 15l1.2-3.6A2 2 0 0 1 8.1 10h7.8a2 2 0 0 1 1.9 1.4L19 15" stroke="#241436" stroke-width="1.6" fill="none" stroke-linecap="round"/><rect x="4" y="15" width="16" height="4" rx="1.5" fill="#241436"/><circle cx="7.5" cy="19" r="1.6" fill="var(--gold)"/><circle cx="16.5" cy="19" r="1.6" fill="var(--gold)"/></svg>
-        GOGUWAHATI
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="var(--purple-light)"/><circle cx="12" cy="9" r="3.4" fill="#241436"/><path d="M6 19c0-3 2.7-5 6-5s6 2 6 5" stroke="#241436" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        GOGUWAHATI <span style="opacity:0.7; font-weight:500;">Rider</span>
       </div>
       <div style="display:flex; gap:6px;">
         <button id="btnInstallHeader" title="Install App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">📲</button>
@@ -230,6 +242,7 @@ let pickupCoords = null; // {lat, lng, label}
 let destCoords = null; // {lat, lng, label}
 let destMapInstance = null;
 let destMarker = null;
+let lastKnownRideStatus = null; // used to detect the accepted -> in_progress transition (driver arrived & picked up)
 
 const heroStatus = document.getElementById('heroStatus');
 const heroSub = document.getElementById('heroSub');
@@ -240,6 +253,55 @@ const authScreen = document.getElementById('authScreen');
 const appShell = document.getElementById('appShell');
 
 heroStatus.textContent = 'Connecting…';
+
+// ================= SOUND ALERTS (Web Audio, no files needed) =================
+// Same autoplay-policy fix as the driver app: audio only plays reliably if a
+// user tap has "unlocked" it first. We unlock on the first tap anywhere, and
+// explicitly on Login/Register/Book Ride (all real taps).
+let audioCtx;
+let audioUnlocked = false;
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function unlockAudio() {
+  if (audioUnlocked) return;
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  playTone(440, 0.01, 0);
+  audioUnlocked = true;
+}
+function playTone(freq, duration, delay, type='sine') {
+  const ctx = getCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+  gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + delay + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime + delay);
+  osc.stop(ctx.currentTime + delay + duration + 0.05);
+}
+// Driver arrived & picked you up (accepted -> in_progress)
+function playDriverArrivedSound() {
+  playTone(1200, 0.15, 0);
+  playTone(1200, 0.15, 0.22);
+  playTone(1200, 0.15, 0.44);
+}
+// Driver accepted your request
+function playDriverAssignedSound() {
+  playTone(700, 0.16, 0);
+  playTone(950, 0.22, 0.18);
+}
+function playCancelSound() {
+  playTone(400, 0.3, 0, 'sawtooth');
+  playTone(280, 0.4, 0.28, 'sawtooth');
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
 
 // ================= AUTH =================
 auth.onAuthStateChanged(user => {
@@ -266,6 +328,7 @@ document.getElementById('linkToRegister').addEventListener('click', () => showAu
 document.getElementById('linkToLogin').addEventListener('click', () => showAuthMode('login'));
 
 document.getElementById('btnDoLogin').addEventListener('click', () => {
+  unlockAudio();
   const email = document.getElementById('loginEmailInput').value.trim();
   const pass = document.getElementById('loginPassInput').value;
   const errEl = document.getElementById('authError');
@@ -275,6 +338,7 @@ document.getElementById('btnDoLogin').addEventListener('click', () => {
 });
 
 document.getElementById('btnDoRegister').addEventListener('click', () => {
+  unlockAudio();
   const name = document.getElementById('regNameInput').value.trim();
   const phone = document.getElementById('regPhoneInput').value.trim();
   const email = document.getElementById('regEmailInput').value.trim();
@@ -376,16 +440,24 @@ function renderBookingForm() {
   tabHome.innerHTML = `
     <div class="card">
       <label>Pickup Location</label>
-      <div class="loc-box">
-        <div class="loc-label">Current location</div>
+      <div class="search-wrap">
+        <input id="pickupSearch" type="text" placeholder="Type an address, or use GPS below…" autocomplete="off">
+        <div id="pickupResults" class="search-results" style="display:none;"></div>
+      </div>
+      <div class="loc-box" style="margin-top:8px;">
+        <div class="loc-label">Selected pickup</div>
         <div class="loc-value" id="pickupLabel">Not set</div>
         <button class="loc-btn" id="btnUseLocation">📍 Use My Current Location</button>
       </div>
 
       <label>Destination</label>
+      <div class="search-wrap">
+        <input id="destSearch" type="text" placeholder="Type your destination address…" autocomplete="off">
+        <div id="destResults" class="search-results" style="display:none;"></div>
+      </div>
       <div id="destMap"></div>
       <div class="loc-box">
-        <div class="loc-label">Tap the map above to drop a pin</div>
+        <div class="loc-label">Or tap the map above to drop a pin</div>
         <div class="loc-value" id="destLabel">Not set</div>
       </div>
 
@@ -400,6 +472,22 @@ function renderBookingForm() {
   `;
 
   initDestMap();
+  setupAddressSearch('pickupSearch', 'pickupResults', (lat, lng, label) => {
+    pickupCoords = { lat, lng, label };
+    document.getElementById('pickupLabel').textContent = label;
+    document.getElementById('btnUseLocation').textContent = '📍 Update My Location';
+  });
+  setupAddressSearch('destSearch', 'destResults', (lat, lng, label) => {
+    destCoords = { lat, lng, label };
+    document.getElementById('destLabel').textContent = label;
+    // Move the map + marker to match the typed address so the pin and the
+    // text box always agree, and so the rider can still fine-tune by tapping.
+    if (destMapInstance) {
+      destMapInstance.setView([lat, lng], 15);
+      if (destMarker) destMapInstance.removeLayer(destMarker);
+      destMarker = L.marker([lat, lng]).addTo(destMapInstance);
+    }
+  });
 
   document.getElementById('btnUseLocation').addEventListener('click', () => {
     const btn = document.getElementById('btnUseLocation');
@@ -410,6 +498,7 @@ function renderBookingForm() {
       reverseGeocode(lat, lng, label => {
         pickupCoords = { lat, lng, label };
         document.getElementById('pickupLabel').textContent = label;
+        document.getElementById('pickupSearch').value = label;
         btn.textContent = '📍 Update My Location';
       });
     }, err => {
@@ -418,7 +507,48 @@ function renderBookingForm() {
     });
   });
 
-  document.getElementById('btnBook').addEventListener('click', submitRequest);
+  document.getElementById('btnBook').addEventListener('click', () => { unlockAudio(); submitRequest(); });
+}
+
+// Free Nominatim (OpenStreetMap) address search with a debounce, biased
+// toward the Guwahati area so short local place names resolve well.
+function setupAddressSearch(inputId, resultsId, onSelect) {
+  const input = document.getElementById(inputId);
+  const resultsBox = document.getElementById(resultsId);
+  let debounceTimer = null;
+
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    clearTimeout(debounceTimer);
+    if (query.length < 3) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
+    resultsBox.style.display = 'block';
+    resultsBox.innerHTML = `<div class="search-loading">Searching…</div>`;
+    debounceTimer = setTimeout(() => {
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&viewbox=91.55,26.25,91.90,26.05&bounded=0&q=${encodeURIComponent(query)}`)
+        .then(r => r.json())
+        .then(results => {
+          if (!results || results.length === 0) {
+            resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`;
+            return;
+          }
+          resultsBox.innerHTML = results.map((r, i) => `<div class="search-result-item" data-idx="${i}">${r.display_name}</div>`).join('');
+          resultsBox.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+              const r = results[item.dataset.idx];
+              input.value = r.display_name;
+              resultsBox.style.display = 'none';
+              onSelect(parseFloat(r.lat), parseFloat(r.lon), r.display_name);
+            });
+          });
+        })
+        .catch(() => { resultsBox.innerHTML = `<div class="search-loading">Search failed — try again</div>`; });
+    }, 500);
+  });
+
+  // Hide dropdown when tapping elsewhere
+  document.addEventListener('click', e => {
+    if (e.target !== input) resultsBox.style.display = 'none';
+  });
 }
 
 function initDestMap() {
@@ -438,6 +568,7 @@ function initDestMap() {
       reverseGeocode(lat, lng, label => {
         destCoords = { lat, lng, label };
         document.getElementById('destLabel').textContent = label;
+        document.getElementById('destSearch').value = label;
       });
     });
   }, 50);
@@ -453,7 +584,7 @@ function reverseGeocode(lat, lng, callback) {
 function submitRequest() {
   const fareOffer = document.getElementById('inpFare').value.trim();
   if (!pickupCoords) { alert('Please set your pickup location.'); return; }
-  if (!destCoords) { alert('Please tap the map to set your destination.'); return; }
+  if (!destCoords) { alert('Please set your destination.'); return; }
   if (!fareOffer) { alert('Please enter a fare offer.'); return; }
 
   const newRef = db.ref('rideRequests').push();
@@ -474,6 +605,7 @@ function submitRequest() {
     activeRequestId = newRef.key;
     localStorage.setItem('gg_activeRequestId', newRef.key);
     pickupCoords = null; destCoords = null;
+    lastKnownRideStatus = 'requested';
     renderHome();
   }).catch(() => alert('Could not post request. Please try again.'));
 }
@@ -485,6 +617,17 @@ function watchRequest(id) {
     if (!ride) { clearActiveRequest(); renderHome(); return; }
     if (ride.status === 'completed') { renderRatingScreen(id, ride); return; }
     if (ride.status === 'cancelled') { clearActiveRequest(); renderCancelledScreen(); return; }
+
+    // Sound alerts on status transitions (a driver being newly assigned, or
+    // arriving to pick you up), not on every generic Firebase update.
+    if (lastKnownRideStatus === 'requested' && ride.status === 'accepted') {
+      playDriverAssignedSound();
+    }
+    if (lastKnownRideStatus === 'accepted' && ride.status === 'in_progress') {
+      playDriverArrivedSound();
+    }
+    lastKnownRideStatus = ride.status;
+
     heroStatus.textContent = ride.status === 'requested' ? 'Finding a driver…' : ride.status === 'accepted' ? 'Driver assigned!' : 'Ride in progress';
     heroSub.textContent = '';
     renderRideStatus(id, ride);
@@ -494,6 +637,7 @@ function watchRequest(id) {
 function clearActiveRequest() {
   activeRequestId = null;
   localStorage.removeItem('gg_activeRequestId');
+  lastKnownRideStatus = null;
 }
 
 function renderRideStatus(id, ride) {
@@ -505,7 +649,7 @@ function renderRideStatus(id, ride) {
     offersBlock = renderOffers(id, ride.offers);
   } else if (ride.status === 'accepted' || ride.status === 'in_progress') {
     icon = ride.status === 'accepted' ? '✅' : '🚗';
-    title = ride.status === 'accepted' ? 'Driver assigned!' : 'Ride in progress';
+    title = ride.status === 'accepted' ? 'Driver assigned!' : 'Driver arrived — ride in progress';
     sub = ride.status === 'accepted' ? 'Your driver is on the way' : 'Enjoy your ride!';
 
     if (cachedDriverPhotoId !== ride.driverId) {
@@ -754,27 +898,28 @@ function setupInstallShare(installBtnId, shareBtnId) {
   }
 }
 
-// ================= PWA MANIFEST (car + Mi icon, same as driver app) =================
-const carIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#241436"/>
-  <rect width="512" height="512" rx="96" fill="url(#g)" opacity="0.4"/>
-  <defs><linearGradient id="g" x1="0" y1="0" x2="512" y2="512"><stop stop-color="#6D3FC7"/><stop offset="1" stop-color="#241436"/></linearGradient></defs>
-  <g transform="translate(96,180)">
-    <path d="M20 120 L40 60 A30 30 0 0 1 68 40 L252 40 A30 30 0 0 1 280 60 L300 120" stroke="#F2B705" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <rect x="10" y="120" width="300" height="55" rx="18" fill="#F2B705"/>
-    <circle cx="75" cy="178" r="26" fill="#241436"/><circle cx="75" cy="178" r="12" fill="#F2B705"/>
-    <circle cx="245" cy="178" r="26" fill="#241436"/><circle cx="245" cy="178" r="12" fill="#F2B705"/>
+// ================= PWA MANIFEST (PURPLE + person/pin = Rider app) =================
+// Rider app keeps the purple theme but now uses a person-with-location-pin
+// mark instead of the car, so it's instantly distinct from the gold car
+// "Partner" (driver) icon on a home screen.
+const riderIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#6D3FC7"/>
+  <rect width="512" height="512" rx="96" fill="url(#g)" opacity="0.35"/>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="512" y2="512"><stop stop-color="#9B7FE8"/><stop offset="1" stop-color="#241436"/></linearGradient></defs>
+  <g transform="translate(156,120)">
+    <path d="M100 0 C55 0 20 35 20 80 C20 140 100 220 100 220 C100 220 180 140 180 80 C180 35 145 0 100 0 Z" fill="#F2B705"/>
+    <circle cx="100" cy="82" r="34" fill="#241436"/>
   </g>
-  <text x="256" y="440" font-family="Poppins, sans-serif" font-weight="700" font-size="46" fill="#fff" text-anchor="middle">Mi</text>
+  <text x="256" y="440" font-family="Poppins, sans-serif" font-weight="700" font-size="42" fill="#fff" text-anchor="middle">Rider</text>
 </svg>`;
 const manifest = {
   name: "GOGUWAHATI",
-  short_name: "GOGUWAHATI",
+  short_name: "GG Rider",
   start_url: ".",
   display: "standalone",
   background_color: "#241436",
-  theme_color: "#241436",
-  icons: [{ src: "data:image/svg+xml," + encodeURIComponent(carIconSvg), sizes: "512x512", type: "image/svg+xml" }]
+  theme_color: "#6D3FC7",
+  icons: [{ src: "data:image/svg+xml," + encodeURIComponent(riderIconSvg), sizes: "512x512", type: "image/svg+xml" }]
 };
 const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
 document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
