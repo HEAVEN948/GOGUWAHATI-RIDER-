@@ -540,48 +540,35 @@ function renderBookingForm() {
 
 // Live address search tries Mappls (MapmyIndia) first — it has much deeper
 // coverage of small Indian places (local schools, shops, landmarks) than
-// OpenStreetMap. If the Mappls call fails for any reason (key/domain issue,
-// network error, unexpected response shape), it automatically falls back to
-// Photon so the search box keeps working for riders either way.
+// OpenStreetMap. Mappls' autosuggest only returns a place ID ("eLoc"), not
+// coordinates — so once the rider picks a suggestion, one more call resolves
+// that eLoc into an actual lat/lng before the pin gets placed. If Mappls
+// fails at any step (key/domain issue, network error, unexpected response),
+// it automatically falls back to Photon/Nominatim so the search always works.
 function setupAddressSearch(inputId, resultsId, onSelect) {
   const input = document.getElementById(inputId);
   const resultsBox = document.getElementById(resultsId);
   let debounceTimer = null;
   let activeToken = 0;
 
-  function showResults(items, myToken) {
-    if (myToken !== activeToken) return;
-    if (items.length === 0) { resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`; return; }
-    resultsBox.innerHTML = items.map((it, i) => `<div class="search-result-item" data-idx="${i}">${it.label}</div>`).join('');
-    resultsBox.querySelectorAll('.search-result-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const it = items[item.dataset.idx];
-        input.value = it.label;
-        resultsBox.style.display = 'none';
-        onSelect(it.lat, it.lon, it.label);
-      });
-    });
-  }
-
   function searchMappls(query, myToken) {
-    return fetch(`https://apis.mappls.com/advancedmaps/v1/${MAPPLS_KEY}/search/json?query=${encodeURIComponent(query)}&region=IND`)
-      .then(r => { if (!r.ok) throw new Error('Mappls request failed'); return r.json(); })
+    return fetch(`https://search.mappls.com/search/places/autosuggest/json?query=${encodeURIComponent(query)}&location=26.1445,91.7362&region=IND&access_token=${MAPPLS_KEY}`)
+      .then(r => { if (!r.ok) throw new Error('Mappls HTTP ' + r.status); return r.json(); })
       .then(data => {
-        const raw = data.suggestedLocations || data.copResults || [];
-        if (!raw.length) throw new Error('No Mappls results');
+        const raw = data.suggestedLocations || [];
+        if (!raw.length) throw new Error('Mappls: no results');
         const items = raw.map(loc => ({
-          label: loc.placeAddress || loc.placeName || loc.formattedAddress || '',
-          lat: parseFloat(loc.latitude),
-          lon: parseFloat(loc.longitude)
-        })).filter(it => it.label && !isNaN(it.lat) && !isNaN(it.lon));
-        if (!items.length) throw new Error('Unusable Mappls results');
+          label: loc.placeAddress || loc.placeName || '',
+          eLoc: loc.eLoc
+        })).filter(it => it.label && it.eLoc);
+        if (!items.length) throw new Error('Mappls: unusable results');
         showResults(items, myToken);
       });
   }
 
   function searchPhoton(query, myToken) {
     return fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lon=91.7362&lat=26.1445`)
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error('Photon HTTP ' + r.status); return r.json(); })
       .then(data => {
         const features = (data && data.features) || [];
         const items = features.map(f => ({
@@ -594,6 +581,55 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
       });
   }
 
+  // Converts a Mappls eLoc (place ID) into actual coordinates once a rider
+  // taps a specific suggestion — done lazily per-pick rather than for every
+  // suggestion, to keep this to one lookup instead of six.
+  function resolveMapplsCoords(eLoc) {
+    return fetch(`https://place.mappls.com/O2O/entity/place-details/${eLoc}?access_token=${MAPPLS_KEY}`)
+      .then(r => { if (!r.ok) throw new Error('Place details HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const rec = (data.results && data.results[0]) || data;
+        const lat = parseFloat(rec.latitude ?? rec.lat ?? (rec.location && rec.location.lat));
+        const lon = parseFloat(rec.longitude ?? rec.lng ?? rec.lon ?? (rec.location && rec.location.lng));
+        if (isNaN(lat) || isNaN(lon)) throw new Error('No coordinates in place details');
+        return { lat, lon };
+      });
+  }
+
+  // Last-resort: one single one-off Nominatim lookup of the chosen text,
+  // only fired if the Mappls coordinate lookup above fails.
+  function resolveCoordsFallback(label) {
+    return fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(label)}`)
+      .then(r => r.json())
+      .then(results => {
+        if (!results || !results.length) throw new Error('Fallback geocode found nothing');
+        return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+      });
+  }
+
+  function showResults(items, myToken) {
+    if (myToken !== activeToken) return;
+    if (items.length === 0) { resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`; return; }
+    resultsBox.innerHTML = items.map((it, i) => `<div class="search-result-item" data-idx="${i}">${it.label}</div>`).join('');
+    resultsBox.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const it = items[item.dataset.idx];
+        input.value = it.label;
+        resultsBox.style.display = 'none';
+        if (it.eLoc) {
+          // Mappls result — resolve the eLoc into coordinates first
+          resolveMapplsCoords(it.eLoc)
+            .catch(() => resolveCoordsFallback(it.label))
+            .then(coords => onSelect(coords.lat, coords.lon, it.label))
+            .catch(() => alert('Could not pinpoint that location — please try tapping the map or pick a different suggestion.'));
+        } else {
+          // Photon result — coordinates already included
+          onSelect(it.lat, it.lon, it.label);
+        }
+      });
+    });
+  }
+
   input.addEventListener('input', () => {
     const query = input.value.trim();
     clearTimeout(debounceTimer);
@@ -602,8 +638,19 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
     resultsBox.innerHTML = `<div class="search-loading">Searching…</div>`;
     const myToken = ++activeToken;
     debounceTimer = setTimeout(() => {
-      searchMappls(query, myToken).catch(() => searchPhoton(query, myToken))
-        .catch(() => { if (myToken === activeToken) resultsBox.innerHTML = `<div class="search-loading">Search failed — check your connection and try again</div>`; });
+      let mapplsError = '';
+      searchMappls(query, myToken)
+        .catch(err => {
+          mapplsError = (err && err.message) || 'unknown Mappls error';
+          console.warn('Mappls search failed, falling back to Photon:', mapplsError);
+          return searchPhoton(query, myToken);
+        })
+        .catch(err => {
+          if (myToken !== activeToken) return;
+          const photonError = (err && err.message) || 'unknown Photon error';
+          console.error('Both Mappls and Photon failed:', mapplsError, photonError);
+          resultsBox.innerHTML = `<div class="search-loading">Search failed.<br><small>Mappls: ${mapplsError}<br>Photon: ${photonError}</small></div>`;
+        });
     }, 350);
   });
 
