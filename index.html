@@ -777,6 +777,15 @@ function renderRideStatus(id, ride) {
       ? `<img src="${cachedDriverPhoto}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; float:left; margin-right:12px;">`
       : `<div style="width:54px; height:54px; border-radius:50%; background:#eee; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#999;">${(ride.driverName||'D').charAt(0)}</div>`;
 
+    // Reminder button so the rider knows to send their exact pickup (or,
+    // once picked up, destination) location via WhatsApp's own location
+    // picker — same free, pinpoint-accurate Google Maps search the driver
+    // already gets on their end when they tap this.
+    const locationReminderText = ride.status === 'in_progress'
+      ? `Hi ${ride.driverName}, here's my exact drop-off location:`
+      : `Hi ${ride.driverName}, here's my exact pickup location:`;
+    const locationReminderLabel = ride.status === 'in_progress' ? '📍 Send Drop-off Location' : '📍 Send Pickup Location';
+
     driverBlock = `
       <div class="driver-info" style="overflow:hidden;">
         ${photoHtml}
@@ -786,6 +795,7 @@ function renderRideStatus(id, ride) {
           <a href="tel:${ride.driverPhone}" class="btn-call">📞 Call</a>
           <a href="https://wa.me/${ride.driverPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>
         </div>
+        <a href="https://wa.me/${ride.driverPhone}?text=${encodeURIComponent(locationReminderText)}" target="_blank" style="display:block; text-align:center; text-decoration:none; margin-top:8px; padding:10px; border-radius:8px; background:#F0EBFA; color:var(--purple); font-size:13px; font-weight:600;">${locationReminderLabel}<br><span style="font-weight:400; font-size:11px; color:#888;">Opens WhatsApp — tap 📎 → Location → Send Your Current Location (not Live Location)</span></a>
       </div>`;
     cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
   }
