@@ -482,11 +482,11 @@ function renderBookingForm() {
         <input id="destSearch" type="text" placeholder="Type your destination address…" autocomplete="off">
         <div id="destResults" class="search-results" style="display:none;"></div>
       </div>
-      <div id="destMap"></div>
-      <div class="loc-box">
-        <div class="loc-label">Or tap the map above to drop a pin</div>
+      <div class="loc-box" style="margin-top:8px;">
+        <div class="loc-label">Selected destination</div>
         <div class="loc-value" id="destLabel">Not set</div>
       </div>
+      <div id="destMap"></div>
 
       <label>Fare Offer (₹)</label>
       <div style="display:flex; align-items:center; gap:8px;">
@@ -581,28 +581,18 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
       });
   }
 
-  // Converts a Mappls eLoc (place ID) into actual coordinates once a rider
-  // taps a specific suggestion — done lazily per-pick rather than for every
-  // suggestion, to keep this to one lookup instead of six.
-  function resolveMapplsCoords(eLoc) {
-    return fetch(`https://place.mappls.com/O2O/entity/place-details/${eLoc}?access_token=${MAPPLS_KEY}`)
-      .then(r => { if (!r.ok) throw new Error('Place details HTTP ' + r.status); return r.json(); })
-      .then(data => {
-        const rec = (data.results && data.results[0]) || data;
-        const lat = parseFloat(rec.latitude ?? rec.lat ?? (rec.location && rec.location.lat));
-        const lon = parseFloat(rec.longitude ?? rec.lng ?? rec.lon ?? (rec.location && rec.location.lng));
-        if (isNaN(lat) || isNaN(lon)) throw new Error('No coordinates in place details');
-        return { lat, lon };
-      });
-  }
-
-  // Last-resort: one single one-off Nominatim lookup of the chosen text,
-  // only fired if the Mappls coordinate lookup above fails.
-  function resolveCoordsFallback(label) {
+  // Mappls' free tier returns a place ID ("eLoc") from Autosuggest but does
+  // NOT return coordinates for it — converting eLoc to lat/lng is a premium
+  // (paid) feature on their platform. Instead, once a rider picks a Mappls
+  // suggestion, we resolve its full address text through a single one-off
+  // Nominatim lookup — this works much better than Nominatim's own live
+  // search, since a complete address string geocodes far more reliably than
+  // a bare business name typed a few letters at a time.
+  function resolveAddressCoords(label) {
     return fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(label)}`)
       .then(r => r.json())
       .then(results => {
-        if (!results || !results.length) throw new Error('Fallback geocode found nothing');
+        if (!results || !results.length) throw new Error('Could not locate that address on the map');
         return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
       });
   }
@@ -615,15 +605,18 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
       item.addEventListener('click', () => {
         const it = items[item.dataset.idx];
         input.value = it.label;
-        resultsBox.style.display = 'none';
+        resultsBox.innerHTML = `<div class="search-loading">Pinpointing location…</div>`;
         if (it.eLoc) {
-          // Mappls result — resolve the eLoc into coordinates first
-          resolveMapplsCoords(it.eLoc)
-            .catch(() => resolveCoordsFallback(it.label))
-            .then(coords => onSelect(coords.lat, coords.lon, it.label))
-            .catch(() => alert('Could not pinpoint that location — please try tapping the map or pick a different suggestion.'));
+          // Mappls result — resolve its address text into coordinates
+          resolveAddressCoords(it.label)
+            .then(coords => { resultsBox.style.display = 'none'; onSelect(coords.lat, coords.lon, it.label); })
+            .catch(() => {
+              resultsBox.style.display = 'none';
+              alert('Found the address but could not pinpoint it on the map — please try tapping the map directly, or pick a different suggestion.');
+            });
         } else {
           // Photon result — coordinates already included
+          resultsBox.style.display = 'none';
           onSelect(it.lat, it.lon, it.label);
         }
       });
@@ -663,22 +656,15 @@ function initDestMap() {
   setTimeout(() => {
     const container = document.getElementById('destMap');
     if (!container) return;
-    destMapInstance = L.map('destMap').setView([26.1445, 91.7362], 12); // Guwahati default center
+    // Read-only preview map: no click-to-pin, since a tourist/rider unfamiliar
+    // with the area has no way to know which exact spot to tap. Destination
+    // is set purely via the search bar; the marker below is placed
+    // automatically once a search result is picked (see setupAddressSearch's
+    // onSelect for destSearch).
+    destMapInstance = L.map('destMap', { dragging: true, scrollWheelZoom: false, tap: false }).setView([26.1445, 91.7362], 12); // Guwahati default center
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(destMapInstance);
-
-    destMapInstance.on('click', e => {
-      const { lat, lng } = e.latlng;
-      if (destMarker) destMapInstance.removeLayer(destMarker);
-      destMarker = L.marker([lat, lng]).addTo(destMapInstance);
-      document.getElementById('destLabel').textContent = 'Locating address…';
-      reverseGeocode(lat, lng, label => {
-        destCoords = { lat, lng, label };
-        document.getElementById('destLabel').textContent = label;
-        document.getElementById('destSearch').value = label;
-      });
-    });
   }, 50);
 }
 
@@ -777,15 +763,6 @@ function renderRideStatus(id, ride) {
       ? `<img src="${cachedDriverPhoto}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; float:left; margin-right:12px;">`
       : `<div style="width:54px; height:54px; border-radius:50%; background:#eee; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#999;">${(ride.driverName||'D').charAt(0)}</div>`;
 
-    // Reminder button so the rider knows to send their exact pickup (or,
-    // once picked up, destination) location via WhatsApp's own location
-    // picker — same free, pinpoint-accurate Google Maps search the driver
-    // already gets on their end when they tap this.
-    const locationReminderText = ride.status === 'in_progress'
-      ? `Hi ${ride.driverName}, here's my exact drop-off location:`
-      : `Hi ${ride.driverName}, here's my exact pickup location:`;
-    const locationReminderLabel = ride.status === 'in_progress' ? '📍 Send Drop-off Location' : '📍 Send Pickup Location';
-
     driverBlock = `
       <div class="driver-info" style="overflow:hidden;">
         ${photoHtml}
@@ -795,7 +772,6 @@ function renderRideStatus(id, ride) {
           <a href="tel:${ride.driverPhone}" class="btn-call">📞 Call</a>
           <a href="https://wa.me/${ride.driverPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>
         </div>
-        <a href="https://wa.me/${ride.driverPhone}?text=${encodeURIComponent(locationReminderText)}" target="_blank" style="display:block; text-align:center; text-decoration:none; margin-top:8px; padding:10px; border-radius:8px; background:#F0EBFA; color:var(--purple); font-size:13px; font-weight:600;">${locationReminderLabel}<br><span style="font-weight:400; font-size:11px; color:#888;">Opens WhatsApp — tap 📎 → Location → Send Your Current Location (not Live Location)</span></a>
       </div>`;
     cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
   }
