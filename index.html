@@ -244,6 +244,28 @@ let destMapInstance = null;
 let destMarker = null;
 let lastKnownRideStatus = null; // used to detect the accepted -> in_progress transition (driver arrived & picked up)
 
+// ================= APP THEME (rider-chosen, saved locally on this device) =================
+const THEMES = {
+  purple: { purple:'#6D3FC7', purpleDeep:'#241436', purpleLight:'#9B7FE8', gold:'#F2B705', river:'#3E8FB0', bg:'#F7F5FC' },
+  ocean:  { purple:'#1E6FD9', purpleDeep:'#0B2A4A', purpleLight:'#6FA8E8', gold:'#F2B705', river:'#3E8FB0', bg:'#F2F8FD' },
+  sunset: { purple:'#D9631E', purpleDeep:'#3A1406', purpleLight:'#F0946A', gold:'#F2B705', river:'#E28743', bg:'#FDF3EC' },
+  forest: { purple:'#2E8B57', purpleDeep:'#0F2B1D', purpleLight:'#7FCB9E', gold:'#F2B705', river:'#3E8FB0', bg:'#F1FAF4' }
+};
+let currentTheme = localStorage.getItem('gg_rider_theme') || 'purple';
+function applyTheme(name) {
+  const t = THEMES[name] || THEMES.purple;
+  const root = document.documentElement.style;
+  root.setProperty('--purple', t.purple);
+  root.setProperty('--purple-deep', t.purpleDeep);
+  root.setProperty('--purple-light', t.purpleLight);
+  root.setProperty('--gold', t.gold);
+  root.setProperty('--river', t.river);
+  root.setProperty('--bg', t.bg);
+  currentTheme = name;
+  localStorage.setItem('gg_rider_theme', name);
+}
+applyTheme(currentTheme); // apply immediately on load, before first render, so there's no flash of the default theme
+
 const heroStatus = document.getElementById('heroStatus');
 const heroSub = document.getElementById('heroSub');
 const tabHome = document.getElementById('tab-home');
@@ -510,12 +532,24 @@ function renderBookingForm() {
   document.getElementById('btnBook').addEventListener('click', () => { unlockAudio(); submitRequest(); });
 }
 
-// Free Nominatim (OpenStreetMap) address search with a debounce, biased
-// toward the Guwahati area so short local place names resolve well.
+// Live address search uses Photon (by Komoot) — a free, no-key geocoder
+// built specifically for autocomplete/typeahead. (Nominatim's own usage
+// policy asks apps NOT to hit it on every keystroke — doing so is what was
+// causing suggestions to silently fail or come back empty. Nominatim is
+// still used elsewhere, just for one-off reverse lookups like GPS/map-tap,
+// which is what it's meant for.)
 function setupAddressSearch(inputId, resultsId, onSelect) {
   const input = document.getElementById(inputId);
   const resultsBox = document.getElementById(resultsId);
   let debounceTimer = null;
+  let activeToken = 0; // guards against a slow older request overwriting a newer one
+
+  function formatPhotonLabel(props) {
+    return [props.name, props.street, props.city || props.district, props.state, props.country]
+      .filter(Boolean)
+      .filter((v, i, arr) => arr.indexOf(v) === i) // drop duplicate consecutive parts
+      .join(', ');
+  }
 
   input.addEventListener('input', () => {
     const query = input.value.trim();
@@ -523,26 +557,35 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
     if (query.length < 3) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
     resultsBox.style.display = 'block';
     resultsBox.innerHTML = `<div class="search-loading">Searching…</div>`;
+    const myToken = ++activeToken;
     debounceTimer = setTimeout(() => {
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&viewbox=91.55,26.25,91.90,26.05&bounded=0&q=${encodeURIComponent(query)}`)
+      // lat/lon here just bias results toward Guwahati; it doesn't restrict them.
+      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lon=91.7362&lat=26.1445`)
         .then(r => r.json())
-        .then(results => {
-          if (!results || results.length === 0) {
+        .then(data => {
+          if (myToken !== activeToken) return; // a newer keystroke already superseded this request
+          const features = (data && data.features) || [];
+          if (features.length === 0) {
             resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`;
             return;
           }
-          resultsBox.innerHTML = results.map((r, i) => `<div class="search-result-item" data-idx="${i}">${r.display_name}</div>`).join('');
+          resultsBox.innerHTML = features.map((f, i) => `<div class="search-result-item" data-idx="${i}">${formatPhotonLabel(f.properties)}</div>`).join('');
           resultsBox.querySelectorAll('.search-result-item').forEach(item => {
             item.addEventListener('click', () => {
-              const r = results[item.dataset.idx];
-              input.value = r.display_name;
+              const f = features[item.dataset.idx];
+              const label = formatPhotonLabel(f.properties);
+              const [lon, lat] = f.geometry.coordinates;
+              input.value = label;
               resultsBox.style.display = 'none';
-              onSelect(parseFloat(r.lat), parseFloat(r.lon), r.display_name);
+              onSelect(lat, lon, label);
             });
           });
         })
-        .catch(() => { resultsBox.innerHTML = `<div class="search-loading">Search failed — try again</div>`; });
-    }, 500);
+        .catch(() => {
+          if (myToken !== activeToken) return;
+          resultsBox.innerHTML = `<div class="search-loading">Search failed — check your connection and try again</div>`;
+        });
+    }, 350);
   });
 
   // Hide dropdown when tapping elsewhere
@@ -615,8 +658,14 @@ function watchRequest(id) {
   db.ref('rideRequests/' + id).on('value', snapshot => {
     const ride = snapshot.val();
     if (!ride) { clearActiveRequest(); renderHome(); return; }
-    if (ride.status === 'completed') { renderRatingScreen(id, ride); return; }
-    if (ride.status === 'cancelled') { clearActiveRequest(); renderCancelledScreen(); return; }
+    if (ride.status === 'completed') {
+      db.ref('rideRequests/' + id).off(); // this ride is finalized, stop listening to it
+      clearActiveRequest();
+      renderHome(); // dashboard goes straight back to "Book a ride" — the finished ride lives in History, not here
+      openCompletionModal(id, ride);
+      return;
+    }
+    if (ride.status === 'cancelled') { db.ref('rideRequests/' + id).off(); clearActiveRequest(); renderCancelledScreen(); return; }
 
     // Sound alerts on status transitions (a driver being newly assigned, or
     // arriving to pick you up), not on every generic Firebase update.
@@ -787,22 +836,32 @@ function renderCancelledScreen() {
     </div>`;
 }
 
-// ================= RATING =================
-function renderRatingScreen(id, ride) {
+// ================= RIDE COMPLETION: rating + payment reminder (modal, not the dashboard) =================
+function openCompletionModal(id, ride) {
+  const fare = ride.agreedFare || ride.fareOffer;
   let selectedStars = 0;
-  tabHome.innerHTML = `
-    <div class="card status-section">
-      <div class="status-icon">🎉</div>
-      <div class="status-title">Ride Completed</div>
-      <div class="status-sub">How was your ride with ${ride.driverName}?</div>
-      <div class="star-row" id="starRow">
-        ${[1,2,3,4,5].map(n => `<span data-val="${n}">★</span>`).join('')}
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <div style="text-align:center;">
+        <div style="font-size:38px; margin-bottom:6px;">🎉</div>
+        <h3 style="margin-bottom:4px;">Ride Completed</h3>
+        <div style="font-size:13px; color:#888; margin-bottom:14px;">How was your ride with ${ride.driverName}?</div>
+        <div class="star-row" id="completionStarRow">
+          ${[1,2,3,4,5].map(n => `<span data-val="${n}">★</span>`).join('')}
+        </div>
       </div>
-      <button class="pill-btn btn-purple" id="btnSubmitRating">Submit Rating</button>
-      <button class="pill-btn btn-flat" style="margin-top:10px;" id="btnSkipRating">Skip</button>
-    </div>`;
+      <div style="background:#FFF7E0; border:1px solid #F2D98A; border-radius:10px; padding:12px; margin:14px 0; font-size:13px; color:#6B5000; line-height:1.6;">
+        💵 Please pay <strong>₹${fare}</strong> directly to ${ride.driverName} now — in cash, or by scanning their UPI QR code shown on their phone. GOGUWAHATI does not collect ride fares.
+      </div>
+      <button class="pill-btn btn-purple" id="btnSubmitCompletionRating">Submit Rating</button>
+      <button class="pill-btn btn-flat" style="margin-top:10px;" id="btnSkipCompletionRating">Skip</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 
-  const stars = document.querySelectorAll('#starRow span');
+  const stars = overlay.querySelectorAll('#completionStarRow span');
   stars.forEach(star => {
     star.addEventListener('click', () => {
       selectedStars = parseInt(star.dataset.val);
@@ -810,15 +869,12 @@ function renderRatingScreen(id, ride) {
     });
   });
 
-  function finishRating() {
-    clearActiveRequest();
-    if (selectedStars > 0) {
-      db.ref('rideRequests/' + id).update({ riderRating: selectedStars });
-    }
-    renderHome();
+  function finish() {
+    if (selectedStars > 0) db.ref('rideRequests/' + id).update({ riderRating: selectedStars });
+    overlay.remove();
   }
-  document.getElementById('btnSubmitRating').addEventListener('click', finishRating);
-  document.getElementById('btnSkipRating').addEventListener('click', finishRating);
+  overlay.querySelector('#btnSubmitCompletionRating').addEventListener('click', finish);
+  overlay.querySelector('#btnSkipCompletionRating').addEventListener('click', finish);
 }
 
 // ================= HISTORY TAB =================
@@ -858,10 +914,26 @@ function renderMenu() {
       </div>
     </div>
     <div class="card tight">
+      <div style="font-weight:700; margin-bottom:4px;">App Theme</div>
+      <div style="font-size:12px; color:#888; margin-bottom:12px;">Choose a background theme for your app</div>
+      <div style="display:flex; gap:14px;" id="themeSwatches">
+        ${Object.keys(THEMES).map(name => `
+          <button data-theme="${name}" title="${name}" style="width:42px; height:42px; border-radius:50%; border:3px solid ${currentTheme === name ? '#241436' : 'transparent'}; background:${THEMES[name].purple}; cursor:pointer;"></button>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card tight">
       <button class="pill-btn btn-flat" id="btnLogoutRider">Logout</button>
     </div>
     <div class="credit-line">GOGUWAHATI by Marak Innovation</div>
   `;
+  document.querySelectorAll('#themeSwatches button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyTheme(btn.dataset.theme);
+      renderMenu(); // re-render so the selected swatch's border updates
+    });
+  });
   document.getElementById('btnLogoutRider').addEventListener('click', () => {
     if (confirm('Logout of your account?')) auth.signOut();
   });
