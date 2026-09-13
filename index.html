@@ -681,6 +681,11 @@ function submitRequest() {
   if (!destCoords) { alert('Please set your destination.'); return; }
   if (!fareOffer) { alert('Please enter a fare offer.'); return; }
 
+  // A 4-digit OTP the rider shares with the driver only once they've
+  // physically arrived — this confirms both sides that it's genuinely the
+  // matched driver and passenger, not a mix-up or a stranger.
+  const otp = String(Math.floor(1000 + Math.random() * 9000));
+
   const newRef = db.ref('rideRequests').push();
   newRef.set({
     riderId,
@@ -693,6 +698,7 @@ function submitRequest() {
     destLat: destCoords.lat,
     destLng: destCoords.lng,
     fareOffer,
+    otp,
     status: 'requested',
     createdAt: Date.now()
   }).then(() => {
@@ -763,7 +769,21 @@ function renderRideStatus(id, ride) {
       ? `<img src="${cachedDriverPhoto}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; float:left; margin-right:12px;">`
       : `<div style="width:54px; height:54px; border-radius:50%; background:#eee; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#999;">${(ride.driverName||'D').charAt(0)}</div>`;
 
+    // OTP: shown only while waiting for pickup, so the rider can read it out
+    // to the driver in person to confirm it's genuinely the matched driver.
+    // Once the ride is in progress, that check has already happened, so a
+    // small "Verified" tag replaces it instead of the code.
+    const otpBlock = ride.otp
+      ? (ride.status === 'accepted'
+          ? `<div style="background:#F0EBFA; border-radius:10px; padding:14px; text-align:center; margin:14px 0;">
+               <div style="font-size:12px; color:#888;">Share this OTP with your driver ONLY once they've arrived</div>
+               <div style="font-family:'Poppins',sans-serif; font-size:30px; font-weight:800; color:var(--purple-deep); letter-spacing:6px; margin-top:4px;">${ride.otp}</div>
+             </div>`
+          : `<div style="text-align:center; margin:10px 0; font-size:12px; color:var(--success); font-weight:600;">✓ Pickup OTP Verified</div>`)
+      : '';
+
     driverBlock = `
+      ${otpBlock}
       <div class="driver-info" style="overflow:hidden;">
         ${photoHtml}
         <div class="name">${ride.driverName}</div>
@@ -772,6 +792,7 @@ function renderRideStatus(id, ride) {
           <a href="tel:${ride.driverPhone}" class="btn-call">📞 Call</a>
           <a href="https://wa.me/${ride.driverPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>
         </div>
+        <button onclick="openChatModal('${id}','rider','${ride.driverName}')" style="width:100%; margin-top:8px; padding:10px; border-radius:8px; border:none; background:var(--purple); color:#fff; font-weight:700; font-size:13px;">💬 Chat with Driver</button>
       </div>`;
     cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
   }
@@ -795,6 +816,78 @@ function renderRideStatus(id, ride) {
 
   const cancelEl = document.getElementById('btnCancel');
   if (cancelEl) cancelEl.addEventListener('click', () => openCancelModal(id));
+}
+
+// ================= IN-RIDE CHAT =================
+// A simple real-time text chat scoped to one ride, stored under
+// rideRequests/{id}/messages. Either side can also share their current GPS
+// location as a tappable Google Maps link — built from free browser
+// geolocation, no maps API or billing involved.
+let activeChatMsgsRef = null;
+
+function openChatModal(id, myRole, otherName) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet" style="display:flex; flex-direction:column; max-height:82vh;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="margin:0;">Chat with ${otherName}</h3>
+        <button id="btnCloseChat" style="background:none; border:none; font-size:22px; color:#999; line-height:1;">✕</button>
+      </div>
+      <div id="chatMessages" style="flex:1; overflow-y:auto; min-height:180px; max-height:48vh; display:flex; flex-direction:column; gap:8px; padding:4px 2px;"></div>
+      <div style="display:flex; gap:6px; margin-top:12px;">
+        <button id="btnShareChatLocation" title="Share current location" style="padding:0 14px; border:none; border-radius:8px; background:#F0EBFA; color:var(--purple); font-size:17px;">📍</button>
+        <input id="chatInput" type="text" placeholder="Type a message…" style="flex:1;">
+        <button id="btnSendChat" style="padding:0 18px; border:none; border-radius:8px; background:var(--purple); color:#fff; font-weight:700;">Send</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const msgsContainer = overlay.querySelector('#chatMessages');
+  activeChatMsgsRef = db.ref('rideRequests/' + id + '/messages');
+  activeChatMsgsRef.on('value', snap => {
+    const msgs = snap.val() || {};
+    const sorted = Object.values(msgs).sort((a, b) => a.ts - b.ts);
+    msgsContainer.innerHTML = sorted.length
+      ? sorted.map(m => renderChatBubble(m, myRole)).join('')
+      : '<div style="text-align:center; color:#999; font-size:13px; padding:24px 10px;">No messages yet — say hello, or share your location if there\'s any confusion finding each other.</div>';
+    msgsContainer.scrollTop = msgsContainer.scrollHeight;
+  });
+
+  function sendChatMessage(text, mapsLink) {
+    if (!text && !mapsLink) return;
+    activeChatMsgsRef.push({ sender: myRole, text: text || '', mapsLink: mapsLink || null, ts: Date.now() });
+  }
+
+  overlay.querySelector('#btnSendChat').addEventListener('click', () => {
+    const input = overlay.querySelector('#chatInput');
+    const text = input.value.trim();
+    if (text) { sendChatMessage(text); input.value = ''; }
+  });
+  overlay.querySelector('#chatInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') overlay.querySelector('#btnSendChat').click();
+  });
+  overlay.querySelector('#btnShareChatLocation').addEventListener('click', () => {
+    if (!navigator.geolocation) { alert('GPS not supported on this device/browser.'); return; }
+    navigator.geolocation.getCurrentPosition(pos => {
+      const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+      sendChatMessage('📍 Shared current location', link);
+    }, () => alert('Could not get your current location. Please check location permission.'));
+  });
+  overlay.querySelector('#btnCloseChat').addEventListener('click', () => {
+    if (activeChatMsgsRef) { activeChatMsgsRef.off(); activeChatMsgsRef = null; }
+    overlay.remove();
+  });
+}
+
+function renderChatBubble(m, myRole) {
+  const isMine = m.sender === myRole;
+  const bubbleBg = isMine ? 'var(--purple)' : '#F0EBFA';
+  const textColor = isMine ? '#fff' : 'var(--text)';
+  const linkColor = isMine ? '#fff' : 'var(--purple)';
+  const linkHtml = m.mapsLink ? `<br><a href="${m.mapsLink}" target="_blank" style="color:${linkColor}; text-decoration:underline; font-weight:700;">Open in Google Maps</a>` : '';
+  const safeText = (m.text || '').replace(/</g, '&lt;');
+  return `<div style="align-self:${isMine ? 'flex-end' : 'flex-start'}; max-width:80%; background:${bubbleBg}; color:${textColor}; padding:9px 13px; border-radius:14px; font-size:14px; line-height:1.4;">${safeText}${linkHtml}</div>`;
 }
 
 function renderOffers(id, offers) {
