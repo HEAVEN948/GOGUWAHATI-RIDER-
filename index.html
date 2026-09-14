@@ -333,6 +333,18 @@ function playCancelSound() {
   playTone(400, 0.3, 0, 'sawtooth');
   playTone(280, 0.4, 0.28, 'sawtooth');
 }
+
+// Straight-line ("as the crow flies") distance in km between two GPS
+// points — free, simple math, no directions API needed. Not actual road
+// distance, but a fair, honest approximation for "how far away" the driver
+// currently is.
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 function playChatMessageSound() {
   playTone(720, 0.1, 0);
   playTone(960, 0.14, 0.1);
@@ -821,6 +833,35 @@ function renderRideStatus(id, ride) {
           : `<div style="text-align:center; margin:10px 0; font-size:12px; color:var(--success); font-weight:600;">✓ Pickup OTP Verified</div>`)
       : '';
 
+    // Live location: the driver app writes its GPS position every few
+    // seconds while a ride is active. Distance shown is straight-line
+    // ("as the crow flies"), not actual road distance — an honest
+    // approximation rather than a real routed ETA, which would need a paid
+    // directions API. The map link always opens to wherever the driver
+    // currently is, since it's rebuilt fresh on every location update.
+    let liveLocationBlock = '';
+    if (ride.driverLiveLat && ride.driverLiveLng) {
+      const targetLat = ride.status === 'accepted' ? ride.pickupLat : ride.destLat;
+      const targetLng = ride.status === 'accepted' ? ride.pickupLng : ride.destLng;
+      const distLabel = ride.status === 'accepted' ? 'from your pickup point' : 'from your destination';
+      const mapsLink = `https://www.google.com/maps/search/?api=1&query=${ride.driverLiveLat},${ride.driverLiveLng}`;
+      const secsAgo = Math.round((Date.now() - (ride.driverLiveUpdatedAt || 0)) / 1000);
+      const freshness = secsAgo < 20 ? 'Live' : `Updated ${secsAgo}s ago`;
+      let distanceText = '';
+      if (targetLat && targetLng) {
+        const km = haversineKm(ride.driverLiveLat, ride.driverLiveLng, targetLat, targetLng);
+        distanceText = `<strong>${km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km'}</strong> ${distLabel}`;
+      }
+      liveLocationBlock = `
+        <div style="background:var(--bg); border-radius:10px; padding:12px 14px; margin:12px 0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div style="font-size:13px;">
+            <span style="color:var(--success); font-weight:700;">● ${freshness}</span>
+            ${distanceText ? '<br>' + distanceText : ''}
+          </div>
+          <a href="${mapsLink}" target="_blank" style="white-space:nowrap; font-size:12px; font-weight:700; color:var(--purple); text-decoration:underline;">View on Map</a>
+        </div>`;
+    }
+
     driverBlock = `
       ${otpBlock}
       <div class="driver-info" style="overflow:hidden;">
@@ -832,6 +873,7 @@ function renderRideStatus(id, ride) {
           <a href="https://wa.me/${ride.driverPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>
         </div>
         <button onclick="openChatModal('${id}','rider','${ride.driverName}')" style="width:100%; margin-top:8px; padding:10px; border-radius:8px; border:none; background:var(--purple); color:#fff; font-weight:700; font-size:13px;">💬 Chat with Driver</button>
+        ${liveLocationBlock}
       </div>`;
     cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
   }
