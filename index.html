@@ -345,6 +345,46 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+
+// Embedded live map showing the driver's marker on an actual map (not just
+// a distance number) — free OpenStreetMap tiles, same as the booking
+// screen's map. Redrawn fresh each time the driver's position updates
+// (~every 6 seconds), which keeps both the driver and the pickup/
+// destination point correctly framed, at the small cost of the view
+// re-centering each refresh rather than preserving a rider's manual pan/zoom.
+let liveRideMapInstance = null;
+function renderLiveRideMap(ride) {
+  const container = document.getElementById('liveRideMap');
+  if (!container || !ride.driverLiveLat || !ride.driverLiveLng) return;
+
+  if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
+
+  liveRideMapInstance = L.map('liveRideMap', { zoomControl: false, attributionControl: false, scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(liveRideMapInstance);
+
+  const driverLatLng = [ride.driverLiveLat, ride.driverLiveLng];
+  const driverIcon = L.divIcon({
+    className: '',
+    html: '<div style="background:#6D3FC7; width:18px; height:18px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 6px rgba(0,0,0,0.5);"></div>',
+    iconSize: [18, 18]
+  });
+  L.marker(driverLatLng, { icon: driverIcon }).addTo(liveRideMapInstance);
+
+  const targetLat = ride.status === 'accepted' ? ride.pickupLat : ride.destLat;
+  const targetLng = ride.status === 'accepted' ? ride.pickupLng : ride.destLng;
+  if (targetLat && targetLng) {
+    const targetIcon = L.divIcon({
+      className: '',
+      html: '<div style="background:#F2B705; width:16px; height:16px; border-radius:50%; border:3px solid #241436;"></div>',
+      iconSize: [16, 16]
+    });
+    L.marker([targetLat, targetLng], { icon: targetIcon }).addTo(liveRideMapInstance);
+    liveRideMapInstance.fitBounds([driverLatLng, [targetLat, targetLng]], { padding: [28, 28] });
+  } else {
+    liveRideMapInstance.setView(driverLatLng, 14);
+  }
+}
+
 function playChatMessageSound() {
   playTone(720, 0.1, 0);
   playTone(960, 0.14, 0.1);
@@ -743,12 +783,20 @@ function watchRequest(id) {
     if (ride.status === 'completed') {
       db.ref('rideRequests/' + id).off(); // this ride is finalized, stop listening to it
       stopChatNotifications();
+      if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
       clearActiveRequest();
       renderHome(); // dashboard goes straight back to "Book a ride" — the finished ride lives in History, not here
       openCompletionModal(id, ride);
       return;
     }
-    if (ride.status === 'cancelled') { db.ref('rideRequests/' + id).off(); stopChatNotifications(); clearActiveRequest(); renderCancelledScreen(); return; }
+    if (ride.status === 'cancelled') {
+      db.ref('rideRequests/' + id).off();
+      stopChatNotifications();
+      if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
+      clearActiveRequest();
+      renderCancelledScreen();
+      return;
+    }
 
     // Sound alerts on status transitions (a driver being newly assigned, or
     // arriving to pick you up), not on every generic Firebase update.
@@ -853,12 +901,13 @@ function renderRideStatus(id, ride) {
         distanceText = `<strong>${km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km'}</strong> ${distLabel}`;
       }
       liveLocationBlock = `
-        <div style="background:var(--bg); border-radius:10px; padding:12px 14px; margin:12px 0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <div id="liveRideMap" style="width:100%; height:200px; border-radius:10px; margin-top:12px; background:#eee;"></div>
+        <div style="background:var(--bg); border-radius:0 0 10px 10px; padding:12px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
           <div style="font-size:13px;">
             <span style="color:var(--success); font-weight:700;">● ${freshness}</span>
             ${distanceText ? '<br>' + distanceText : ''}
           </div>
-          <a href="${mapsLink}" target="_blank" style="white-space:nowrap; font-size:12px; font-weight:700; color:var(--purple); text-decoration:underline;">View on Map</a>
+          <a href="${mapsLink}" target="_blank" style="white-space:nowrap; font-size:12px; font-weight:700; color:var(--purple); text-decoration:underline;">Open in Google Maps</a>
         </div>`;
     }
 
@@ -876,6 +925,18 @@ function renderRideStatus(id, ride) {
         ${liveLocationBlock}
       </div>`;
     cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
+  }
+
+  // The embedded live map's container above only exists once the card's
+  // HTML has actually been written to the page (it's set just below), so
+  // draw the map right after that happens — a fresh small map each time
+  // is simplest and keeps both markers correctly in view, at the cost of
+  // a brief re-center every time the driver's position updates (~6s).
+  if (ride.driverLiveLat && ride.driverLiveLng) {
+    setTimeout(() => renderLiveRideMap(ride), 30);
+  } else if (liveRideMapInstance) {
+    liveRideMapInstance.remove();
+    liveRideMapInstance = null;
   }
 
   tabHome.innerHTML = `
