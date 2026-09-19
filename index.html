@@ -19,8 +19,11 @@
     --purple-light: #9B7FE8;
     --gold: #F2B705;
     --river: #3E8FB0;
-    --bg: #F7F5FC;
-    --text: #241436;
+    --bg: #0A0A0C;
+    --card-bg: #17151C;
+    --card-border: #2A2732;
+    --text: #F2F0F7;
+    --text-muted: #9A96A8;
     --danger: #E24C4B;
     --success: #2AAE6C;
   }
@@ -45,7 +48,7 @@
 
   main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
   .card {
-    background: #fff; border-radius: 14px; padding: 18px;
+    background: var(--card-bg); border-radius: 14px; padding: 18px;
     margin-top: -34px; margin-bottom: 14px;
     box-shadow: 0 4px 16px rgba(36,20,54,0.08);
     position: relative; z-index: 2;
@@ -54,75 +57,75 @@
   .pill-btn { width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: 'Poppins', sans-serif; }
   .btn-purple { background: var(--purple); color: #fff; }
   .btn-gold { background: var(--gold); color: var(--purple-deep); }
-  .btn-outline { background: #fff; border: 2px solid var(--purple); color: var(--purple); }
+  .btn-outline { background: transparent; border: 2px solid var(--purple); color: var(--purple-light); }
   .btn-danger { background: var(--danger); color: #fff; }
   .btn-flat { background: #F0EBFA; color: var(--purple-deep); }
   button { font-family: inherit; }
 
-  label { display: block; font-size: 13px; font-weight: 600; color: #555; margin: 12px 0 6px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin: 12px 0 6px; }
   label:first-child { margin-top: 0; }
-  input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; font-family: inherit; }
+  input, select { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 8px; font-size: 15px; font-family: inherit; background: #0F0D14; color: var(--text); }
   input:focus, select:focus { outline: none; border-color: var(--purple); }
 
-  .loc-box { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin-bottom: 4px; }
-  .loc-box .loc-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+  .loc-box { border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; margin-bottom: 4px; }
+  .loc-box .loc-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
   .loc-box .loc-value { font-size: 14px; font-weight: 600; }
   .loc-btn { margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 13px; background: #F0EBFA; color: var(--purple); }
 
   /* ===== Address search (autocomplete dropdown) ===== */
   .search-wrap { position: relative; }
   .search-results {
-    position: absolute; left: 0; right: 0; top: 100%; background: #fff;
-    border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px;
+    position: absolute; left: 0; right: 0; top: 100%; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-top: none; border-radius: 0 0 8px 8px;
     max-height: 220px; overflow-y: auto; z-index: 50; box-shadow: 0 6px 14px rgba(0,0,0,0.08);
   }
-  .search-result-item { padding: 11px 12px; font-size: 13px; border-bottom: 1px solid #f2f2f2; cursor: pointer; }
+  .search-result-item { padding: 11px 12px; font-size: 13px; border-bottom: 1px solid var(--card-border); cursor: pointer; color: var(--text); }
   .search-result-item:last-child { border-bottom: none; }
   .search-result-item:active { background: #F0EBFA; }
-  .search-loading { padding: 10px 12px; font-size: 12px; color: #999; }
+  .search-loading { padding: 10px 12px; font-size: 12px; color: var(--text-muted); }
 
   #destMap { width: 100%; height: 240px; border-radius: 10px; margin: 8px 0; }
 
   .status-section { text-align: center; }
   .status-icon { width: 60px; height: 60px; border-radius: 50%; background: #F0EBFA; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; }
   .status-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .status-sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .status-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
   .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #F0EBFA; color: var(--purple); margin-bottom: 10px; }
 
   .driver-info { background: var(--bg); border-radius: 10px; padding: 14px; text-align: left; margin: 14px 0; overflow: hidden; }
   .driver-info .name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
-  .driver-info .phone { font-size: 13px; color: #666; }
+  .driver-info .phone { font-size: 13px; color: var(--text-muted); }
   .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
   .action-grid a, .action-grid button { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: none; }
   .btn-call { background: #E3F7EC; color: var(--success); }
   .btn-wa { background: #E3F2FD; color: #1E6FD9; }
 
-  .route-summary { font-size: 13px; color: #666; text-align: left; margin: 14px 0; line-height: 1.6; }
+  .route-summary { font-size: 13px; color: var(--text-muted); text-align: left; margin: 14px 0; line-height: 1.6; }
   .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
   .pickup-dot { background: var(--river); }
   .drop-dot { background: var(--gold); }
 
-  .btn-secondary { background: #eee; color: #555; }
+  .btn-secondary { background: #2A2440; color: var(--purple-light); }
 
-  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; border-top: 1px solid #eee; z-index: 10; }
-  .tab { flex: 1; text-align: center; padding: 10px 0 8px; cursor: pointer; color: #999; font-size: 11px; font-weight: 600; }
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); display: flex; border-top: 1px solid var(--card-border); z-index: 10; }
+  .tab { flex: 1; text-align: center; padding: 10px 0 8px; cursor: pointer; color: var(--text-muted); font-size: 11px; font-weight: 600; }
   .tab.active { color: var(--purple); }
   .tab svg { display: block; margin: 0 auto 3px; width: 22px; height: 22px; }
 
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; z-index: 100; }
-  .modal-sheet { background: #fff; border-radius: 20px 20px 0 0; padding: 22px; width: 100%; max-width: 480px; margin: 0 auto; }
+  .modal-sheet { background: var(--card-bg); border-radius: 20px 20px 0 0; padding: 22px; width: 100%; max-width: 480px; margin: 0 auto; }
   .modal-sheet h3 { margin-bottom: 14px; }
-  .reason-option { display: block; width: 100%; text-align: left; padding: 13px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 10px; background: #fff; font-size: 14px; }
+  .reason-option { display: block; width: 100%; text-align: left; padding: 13px; margin-bottom: 8px; border: 1px solid var(--card-border); border-radius: 10px; background: #0F0D14; font-size: 14px; color: var(--text); }
   .reason-option:active { background: #F0EBFA; border-color: var(--purple); }
 
   .star-row { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
   .star-row span { font-size: 34px; cursor: pointer; color: #ddd; }
   .star-row span.filled { color: var(--gold); }
 
-  .trip-row { padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+  .trip-row { padding: 14px 0; border-bottom: 1px solid var(--card-border); }
   .trip-row:last-child { border-bottom: none; }
   .trip-top { display: flex; justify-content: space-between; }
-  .empty-state { text-align: center; padding: 40px 20px; color: #999; font-size: 14px; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
   .section-title { font-weight: 700; font-size: 15px; margin: 18px 0 10px; }
   .credit-line { text-align: center; font-size: 12px; color: #aaa; margin: 24px 0 10px; }
 </style>
@@ -132,7 +135,7 @@
 <div id="authScreen" style="display:none; max-width:400px; margin:60px auto 0; padding:0 20px;">
   <div style="text-align:center; margin-bottom:20px;">
     <div style="font-family:'Poppins',sans-serif; font-weight:700; font-size:22px; color:var(--purple-deep);">GOGUWAHATI</div>
-    <div style="font-size:13px; color:#888;">Book a ride</div>
+    <div style="font-size:13px; color:var(--text-muted);">Book a ride</div>
   </div>
   <div class="card">
     <div id="authLoginForm">
@@ -144,7 +147,7 @@
       <div style="text-align:center; margin-top:12px; font-size:13px;">
         <a href="#" id="linkForgotPass" style="color:var(--purple);">Forgot password?</a>
       </div>
-      <div style="text-align:center; margin-top:10px; font-size:13px; color:#888;">
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--text-muted);">
         New here? <a href="#" id="linkToRegister" style="color:var(--purple); font-weight:600;">Create account</a>
       </div>
     </div>
@@ -158,7 +161,7 @@
       <label>Password</label>
       <input id="regPassInput" type="password" placeholder="At least 6 characters">
       <button class="pill-btn btn-purple" style="margin-top:14px;" id="btnDoRegister">Create Account</button>
-      <div style="text-align:center; margin-top:10px; font-size:13px; color:#888;">
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--text-muted);">
         Already have an account? <a href="#" id="linkToLogin" style="color:var(--purple); font-weight:600;">Login</a>
       </div>
     </div>
@@ -258,10 +261,10 @@ const MAPPLS_KEY = "zhxouvfqxyblexundbqpmktyrpcpgemybzfx";
 
 // ================= APP THEME (rider-chosen, saved locally on this device) =================
 const THEMES = {
-  purple: { purple:'#6D3FC7', purpleDeep:'#241436', purpleLight:'#9B7FE8', gold:'#F2B705', river:'#3E8FB0', bg:'#F7F5FC' },
-  ocean:  { purple:'#1E6FD9', purpleDeep:'#0B2A4A', purpleLight:'#6FA8E8', gold:'#F2B705', river:'#3E8FB0', bg:'#F2F8FD' },
-  sunset: { purple:'#D9631E', purpleDeep:'#3A1406', purpleLight:'#F0946A', gold:'#F2B705', river:'#E28743', bg:'#FDF3EC' },
-  forest: { purple:'#2E8B57', purpleDeep:'#0F2B1D', purpleLight:'#7FCB9E', gold:'#F2B705', river:'#3E8FB0', bg:'#F1FAF4' }
+  purple: { purple:'#6D3FC7', purpleDeep:'#241436', purpleLight:'#9B7FE8', gold:'#F2B705', river:'#3E8FB0', bg:'#0A0A0C' },
+  ocean:  { purple:'#1E6FD9', purpleDeep:'#0B2A4A', purpleLight:'#6FA8E8', gold:'#F2B705', river:'#3E8FB0', bg:'#060B10' },
+  sunset: { purple:'#D9631E', purpleDeep:'#3A1406', purpleLight:'#F0946A', gold:'#F2B705', river:'#E28743', bg:'#120A06' },
+  forest: { purple:'#2E8B57', purpleDeep:'#0F2B1D', purpleLight:'#7FCB9E', gold:'#F2B705', river:'#3E8FB0', bg:'#05100A' }
 };
 let currentTheme = localStorage.getItem('gg_rider_theme') || 'purple';
 function applyTheme(name) {
@@ -519,7 +522,7 @@ function renderBlockedScreen() {
       <div style="text-align:center; padding:20px 10px;">
         <div style="font-size:40px; margin-bottom:10px;">🚫</div>
         <div style="font-weight:700; font-size:17px; margin-bottom:8px;">Account Suspended</div>
-        <div style="font-size:13px; color:#888; line-height:1.6;">Your account has been suspended by GOGUWAHATI. Contact support if you believe this is a mistake.</div>
+        <div style="font-size:13px; color:var(--text-muted); line-height:1.6;">Your account has been suspended by GOGUWAHATI. Contact support if you believe this is a mistake.</div>
       </div>
     </div>
   `;
@@ -553,9 +556,9 @@ function renderBookingForm() {
 
       <label>Vehicle Type</label>
       <div style="display:flex; gap:8px;" id="vehicleTypeButtons">
-        <button type="button" class="vehicle-type-btn" data-type="Bike" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🏍️<br>Bike</button>
-        <button type="button" class="vehicle-type-btn" data-type="Auto" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🛺<br>Auto</button>
-        <button type="button" class="vehicle-type-btn" data-type="Car" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🚗<br>Car</button>
+        <button type="button" class="vehicle-type-btn" data-type="Bike" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🏍️<br>Bike</button>
+        <button type="button" class="vehicle-type-btn" data-type="Auto" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🛺<br>Auto</button>
+        <button type="button" class="vehicle-type-btn" data-type="Car" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🚗<br>Car</button>
       </div>
 
       <label>Fare Offer (₹)</label>
@@ -565,22 +568,22 @@ function renderBookingForm() {
       </div>
 
       <button class="pill-btn btn-purple" style="margin-top:18px;" id="btnBook">Book Ride</button>
-      <div style="text-align:center; font-size:11px; color:#aaa; margin-top:10px;">Address search powered by Mappls</div>
+      <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:10px;">Address search and map powered by Mappls</div>
     </div>
   `;
 
   document.querySelectorAll('.vehicle-type-btn').forEach(btn => {
     if (btn.dataset.type === selectedVehicleType) {
       btn.style.borderColor = 'var(--purple)';
-      btn.style.background = '#F0EBFA';
-      btn.style.color = 'var(--purple-deep)';
+      btn.style.background = '#2A2440';
+      btn.style.color = '#fff';
     }
     btn.addEventListener('click', () => {
       selectedVehicleType = btn.dataset.type;
       document.querySelectorAll('.vehicle-type-btn').forEach(b => {
-        b.style.borderColor = b === btn ? 'var(--purple)' : '#ddd';
-        b.style.background = b === btn ? '#F0EBFA' : '#fff';
-        b.style.color = b === btn ? 'var(--purple-deep)' : '#555';
+        b.style.borderColor = b === btn ? 'var(--purple)' : 'var(--card-border)';
+        b.style.background = b === btn ? '#2A2440' : '#0F0D14';
+        b.style.color = b === btn ? '#fff' : 'var(--text-muted)';
       });
     });
   });
@@ -596,10 +599,19 @@ function renderBookingForm() {
     document.getElementById('destLabel').textContent = label;
     // Move the map + marker to match the typed address so the pin and the
     // text box always agree, and so the rider can still fine-tune by tapping.
-    if (destMapInstance) {
-      destMapInstance.setView([lat, lng], 15);
-      if (destMarker) destMapInstance.removeLayer(destMarker);
-      destMarker = L.marker([lat, lng]).addTo(destMapInstance);
+    if (!destMapInstance) return;
+    try {
+      if (destMapProvider === 'mappls') {
+        destMapInstance.setCenter({ lat, lng });
+        if (destMarker && destMarker.remove) destMarker.remove();
+        destMarker = new mappls.Marker({ map: destMapInstance, position: { lat, lng } });
+      } else {
+        destMapInstance.setView([lat, lng], 15);
+        if (destMarker) destMapInstance.removeLayer(destMarker);
+        destMarker = L.marker([lat, lng]).addTo(destMapInstance);
+      }
+    } catch (err) {
+      console.warn('Could not update destination marker:', err.message);
     }
   });
 
@@ -738,6 +750,28 @@ function setupAddressSearch(inputId, resultsId, onSelect) {
   });
 }
 
+// Loads Mappls' Map SDK script once (lazily, only when a map is actually
+// needed). If it fails to load or errors for any reason — free-tier
+// restriction, network issue, wrong response — the destination preview
+// automatically falls back to the OpenStreetMap/Leaflet map that was
+// already working, so the booking form never breaks either way.
+let mapplsSdkPromise = null;
+function loadMapplsSdk() {
+  if (mapplsSdkPromise) return mapplsSdkPromise;
+  mapplsSdkPromise = new Promise((resolve, reject) => {
+    if (window.mappls) { resolve(window.mappls); return; }
+    const script = document.createElement('script');
+    script.src = `https://sdk.mappls.com/map/sdk/web?v=3.0&access_token=${MAPPLS_KEY}`;
+    script.onload = () => { window.mappls ? resolve(window.mappls) : reject(new Error('Mappls SDK loaded but mappls object missing')); };
+    script.onerror = () => reject(new Error('Mappls SDK script failed to load'));
+    document.head.appendChild(script);
+    setTimeout(() => reject(new Error('Mappls SDK load timed out')), 8000);
+  });
+  return mapplsSdkPromise;
+}
+
+let destMapProvider = null; // 'mappls' or 'leaflet' — whichever actually ended up loading
+
 function initDestMap() {
   setTimeout(() => {
     const container = document.getElementById('destMap');
@@ -747,10 +781,17 @@ function initDestMap() {
     // is set purely via the search bar; the marker below is placed
     // automatically once a search result is picked (see setupAddressSearch's
     // onSelect for destSearch).
-    destMapInstance = L.map('destMap', { dragging: true, scrollWheelZoom: false, tap: false }).setView([26.1445, 91.7362], 12); // Guwahati default center
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(destMapInstance);
+    loadMapplsSdk().then(mappls => {
+      destMapProvider = 'mappls';
+      destMapInstance = new mappls.Map('destMap', { center: { lat: 26.1445, lng: 91.7362 }, zoomControl: false });
+    }).catch(err => {
+      console.warn('Mappls map unavailable, falling back to OpenStreetMap:', err.message);
+      destMapProvider = 'leaflet';
+      destMapInstance = L.map('destMap', { dragging: true, scrollWheelZoom: false, tap: false }).setView([26.1445, 91.7362], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(destMapInstance);
+    });
   }, 50);
 }
 
@@ -891,7 +932,7 @@ function renderRideStatus(id, ride) {
     }
     const photoHtml = (cachedDriverPhotoId === ride.driverId && cachedDriverPhoto)
       ? `<img src="${cachedDriverPhoto}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; float:left; margin-right:12px;">`
-      : `<div style="width:54px; height:54px; border-radius:50%; background:#eee; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#999;">${(ride.driverName||'D').charAt(0)}</div>`;
+      : `<div style="width:54px; height:54px; border-radius:50%; background:#2A2440; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--text-muted);">${(ride.driverName||'D').charAt(0)}</div>`;
 
     // OTP: shown only while waiting for pickup, so the rider can read it out
     // to the driver in person to confirm it's genuinely the matched driver.
@@ -900,7 +941,7 @@ function renderRideStatus(id, ride) {
     const otpBlock = ride.otp
       ? (ride.status === 'accepted'
           ? `<div style="background:#F0EBFA; border-radius:10px; padding:14px; text-align:center; margin:14px 0;">
-               <div style="font-size:12px; color:#888;">Share this OTP with your driver ONLY once they've arrived</div>
+               <div style="font-size:12px; color:var(--text-muted);">Share this OTP with your driver ONLY once they've arrived</div>
                <div style="font-family:'Poppins',sans-serif; font-size:30px; font-weight:800; color:var(--purple-deep); letter-spacing:6px; margin-top:4px;">${ride.otp}</div>
              </div>`
           : `<div style="text-align:center; margin:10px 0; font-size:12px; color:var(--success); font-weight:600;">✓ Pickup OTP Verified</div>`)
@@ -926,7 +967,7 @@ function renderRideStatus(id, ride) {
         distanceText = `<strong>${km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km'}</strong> ${distLabel}`;
       }
       liveLocationBlock = `
-        <div id="liveRideMap" style="width:100%; height:200px; border-radius:10px; margin-top:12px; background:#eee;"></div>
+        <div id="liveRideMap" style="width:100%; height:200px; border-radius:10px; margin-top:12px; background:#2A2440;"></div>
         <div style="background:var(--bg); border-radius:0 0 10px 10px; padding:12px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
           <div style="font-size:13px;">
             <span style="color:var(--success); font-weight:700;">● ${freshness}</span>
@@ -999,7 +1040,7 @@ function openChatModal(id, myRole, otherName) {
     <div class="modal-sheet" style="display:flex; flex-direction:column; max-height:82vh;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h3 style="margin:0;">Chat with ${otherName}</h3>
-        <button id="btnCloseChat" style="background:none; border:none; font-size:22px; color:#999; line-height:1;">✕</button>
+        <button id="btnCloseChat" style="background:none; border:none; font-size:22px; color:var(--text-muted); line-height:1;">✕</button>
       </div>
       <div id="chatMessages" style="flex:1; overflow-y:auto; min-height:180px; max-height:48vh; display:flex; flex-direction:column; gap:8px; padding:4px 2px;"></div>
       <div style="display:flex; gap:6px; margin-top:12px;">
@@ -1017,7 +1058,7 @@ function openChatModal(id, myRole, otherName) {
     const sorted = Object.values(msgs).sort((a, b) => a.ts - b.ts);
     msgsContainer.innerHTML = sorted.length
       ? sorted.map(m => renderChatBubble(m, myRole)).join('')
-      : '<div style="text-align:center; color:#999; font-size:13px; padding:24px 10px;">No messages yet — say hello, or share your location if there\'s any confusion finding each other.</div>';
+      : '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:24px 10px;">No messages yet — say hello, or share your location if there\'s any confusion finding each other.</div>';
     msgsContainer.scrollTop = msgsContainer.scrollHeight;
   });
 
@@ -1068,7 +1109,7 @@ function renderOffers(id, offers) {
         return `
           <div class="card">
             <div style="font-weight:700;">${o.driverName}</div>
-            <div style="color:#888; font-size:13px; margin-bottom:8px;">${o.driverVehicle || ''}</div>
+            <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">${o.driverVehicle || ''}</div>
             <div style="font-size:20px; font-weight:700; color:var(--gold); margin-bottom:10px;">₹${o.amount}</div>
             <div style="display:flex; gap:8px;">
               <button class="btn-secondary" style="flex:1; padding:10px; border-radius:8px; border:none;" onclick="rejectDriverOffer('${id}','${driverId}')">Decline</button>
@@ -1077,7 +1118,7 @@ function renderOffers(id, offers) {
             <button style="width:100%; margin-top:8px; background:#F0EBFA; color:var(--purple); border:none; padding:10px; border-radius:8px; font-weight:600;" onclick="openRiderCounter('${id}','${driverId}', this)">Counter Back</button>
           </div>`;
       } else if (o.proposedBy === 'rider' && o.status === 'pending') {
-        return `<div class="card"><div style="font-weight:700;">${o.driverName}</div><div style="color:#888; font-size:13px;">Waiting for driver's response to your ₹${o.amount} counter…</div></div>`;
+        return `<div class="card"><div style="font-weight:700;">${o.driverName}</div><div style="color:var(--text-muted); font-size:13px;">Waiting for driver's response to your ₹${o.amount} counter…</div></div>`;
       }
       return '';
     }).join('')}
@@ -1125,7 +1166,7 @@ function openCancelModal(id) {
     <div class="modal-sheet">
       <h3>Why are you cancelling?</h3>
       ${reasons.map(r => `<button class="reason-option" data-reason="${r}">${r}</button>`).join('')}
-      <button class="reason-option" style="text-align:center; color:#999; border:none;" id="btnCloseModal">Never mind</button>
+      <button class="reason-option" style="text-align:center; color:var(--text-muted); border:none;" id="btnCloseModal">Never mind</button>
     </div>`;
   document.body.appendChild(overlay);
   overlay.querySelectorAll('[data-reason]').forEach(btn => {
@@ -1158,7 +1199,7 @@ function openCompletionModal(id, ride) {
       <div style="text-align:center;">
         <div style="font-size:38px; margin-bottom:6px;">🎉</div>
         <h3 style="margin-bottom:4px;">Ride Completed</h3>
-        <div style="font-size:13px; color:#888; margin-bottom:14px;">How was your ride with ${ride.driverName}?</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">How was your ride with ${ride.driverName}?</div>
         <div class="star-row" id="completionStarRow">
           ${[1,2,3,4,5].map(n => `<span data-val="${n}">★</span>`).join('')}
         </div>
@@ -1205,8 +1246,8 @@ function renderHistory() {
             <div style="font-weight:700;">${r.driverName || 'Driver'}</div>
             <div style="font-weight:700; color:var(--purple);">₹${r.agreedFare || r.fareOffer}</div>
           </div>
-          <div style="font-size:12px; color:#999; margin-top:2px;">${r.pickup} → ${r.destination}</div>
-          <div style="font-size:12px; color:#999; margin-top:2px;">${new Date(r.completedAt).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})}${r.riderRating ? ' · ' + '★'.repeat(r.riderRating) : ''}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${r.pickup} → ${r.destination}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${new Date(r.completedAt).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})}${r.riderRating ? ' · ' + '★'.repeat(r.riderRating) : ''}</div>
         </div>
       `).join('')}
     </div>`;
@@ -1221,12 +1262,12 @@ function renderMenu() {
       <div style="width:60px; height:60px; border-radius:50%; background:#F0EBFA; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--purple); font-size:22px;">${riderProfile.name.charAt(0)}</div>
       <div>
         <div style="font-weight:700; font-size:16px;">${riderProfile.name}</div>
-        <div style="font-size:13px; color:#888; margin-top:2px;">${riderProfile.phone}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">${riderProfile.phone}</div>
       </div>
     </div>
     <div class="card tight">
       <div style="font-weight:700; margin-bottom:4px;">App Theme</div>
-      <div style="font-size:12px; color:#888; margin-bottom:12px;">Choose a background theme for your app</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Choose a background theme for your app</div>
       <div style="display:flex; gap:14px;" id="themeSwatches">
         ${Object.keys(THEMES).map(name => `
           <button data-theme="${name}" title="${name}" style="width:42px; height:42px; border-radius:50%; border:3px solid ${currentTheme === name ? '#241436' : 'transparent'}; background:${THEMES[name].purple}; cursor:pointer;"></button>
