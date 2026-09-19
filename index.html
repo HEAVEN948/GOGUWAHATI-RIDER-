@@ -246,6 +246,7 @@ let cachedDriverPhoto = null;
 let cachedDriverPhotoId = null;
 let pickupCoords = null; // {lat, lng, label}
 let destCoords = null; // {lat, lng, label}
+let selectedVehicleType = 'Car'; // defaults to Car; rider can change via the booking form buttons
 let destMapInstance = null;
 let destMarker = null;
 let lastKnownRideStatus = null; // used to detect the accepted -> in_progress transition (driver arrived & picked up)
@@ -550,6 +551,13 @@ function renderBookingForm() {
       </div>
       <div id="destMap"></div>
 
+      <label>Vehicle Type</label>
+      <div style="display:flex; gap:8px;" id="vehicleTypeButtons">
+        <button type="button" class="vehicle-type-btn" data-type="Bike" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🏍️<br>Bike</button>
+        <button type="button" class="vehicle-type-btn" data-type="Auto" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🛺<br>Auto</button>
+        <button type="button" class="vehicle-type-btn" data-type="Car" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid #ddd; background:#fff; font-size:13px; font-weight:600; color:#555;">🚗<br>Car</button>
+      </div>
+
       <label>Fare Offer (₹)</label>
       <div style="display:flex; align-items:center; gap:8px;">
         <span style="font-weight:700;">₹</span>
@@ -560,6 +568,22 @@ function renderBookingForm() {
       <div style="text-align:center; font-size:11px; color:#aaa; margin-top:10px;">Address search powered by Mappls</div>
     </div>
   `;
+
+  document.querySelectorAll('.vehicle-type-btn').forEach(btn => {
+    if (btn.dataset.type === selectedVehicleType) {
+      btn.style.borderColor = 'var(--purple)';
+      btn.style.background = '#F0EBFA';
+      btn.style.color = 'var(--purple-deep)';
+    }
+    btn.addEventListener('click', () => {
+      selectedVehicleType = btn.dataset.type;
+      document.querySelectorAll('.vehicle-type-btn').forEach(b => {
+        b.style.borderColor = b === btn ? 'var(--purple)' : '#ddd';
+        b.style.background = b === btn ? '#F0EBFA' : '#fff';
+        b.style.color = b === btn ? 'var(--purple-deep)' : '#555';
+      });
+    });
+  });
 
   initDestMap();
   setupAddressSearch('pickupSearch', 'pickupResults', (lat, lng, label) => {
@@ -760,6 +784,7 @@ function submitRequest() {
     destLat: destCoords.lat,
     destLng: destCoords.lng,
     fareOffer,
+    vehicleType: selectedVehicleType,
     otp,
     status: 'requested',
     createdAt: Date.now()
