@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opening GOGUWAHATI…</title>
+<style>
+  body {
+    margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: #0A0A0C; color: #F2F0F7; font-family: 'Inter', -apple-system, sans-serif;
+    flex-direction: column; gap: 14px;
+  }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid #2A2732; border-top-color: #6D3FC7;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="spinner"></div>
+<div>Opening GOGUWAHATI…</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+// This page exists purely so the admin app can count real QR-code scans.
+// Both flyers' QR codes point HERE (with ?app=rider or ?app=driver)
+// instead of straight to the app — this page logs one entry to Firebase,
+// then immediately forwards the person on to the real app they scanned for.
+const firebaseConfig = {
+  apiKey: "AIzaSyAGk0uKDDBmSb-IaXRyk2cYp8FfVyhm1w4",
+  authDomain: "goguwahati-bf146.firebaseapp.com",
+  databaseURL: "https://goguwahati-bf146-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "goguwahati-bf146",
+  storageBucket: "goguwahati-bf146.firebasestorage.app",
+  messagingSenderId: "931264152406",
+  appId: "1:931264152406:web:cd9c56f402a13e12088cf7"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// EDIT THESE TWO if either app's live URL ever changes.
+const TARGETS = {
+  rider: "https://heaven948.github.io/GOGUWAHATI-RIDER-/",
+  driver: "https://heaven948.github.io/GOGUWAHATI-driver-v2/"
+};
+
+const params = new URLSearchParams(location.search);
+const app = params.get('app') === 'driver' ? 'driver' : 'rider';
+const target = TARGETS[app];
+
+let redirected = false;
+function goNow() {
+  if (redirected) return;
+  redirected = true;
+  location.replace(target);
+}
+
+db.ref('qrScans/' + app).push({ ts: Date.now() })
+  .then(goNow)
+  .catch(goNow);
+
+// Safety net: redirect anyway even if the Firebase write is slow or fails,
+// so a scan never leaves someone stuck on a blank loading screen.
+setTimeout(goNow, 1500);
+</script>
+</body>
+</html>
