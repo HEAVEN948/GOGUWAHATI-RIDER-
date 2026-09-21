@@ -1,1 +1,1524 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOGUWAHATI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GG Rider">
+<meta name="theme-color" content="#6D3FC7">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --purple-deep: #241436;
+    --purple: #6D3FC7;
+    --purple-light: #9B7FE8;
+    --gold: #F2B705;
+    --river: #3E8FB0;
+    --bg: #0A0A0C;
+    --card-bg: #17151C;
+    --card-border: #2A2732;
+    --text: #F2F0F7;
+    --text-muted: #9A96A8;
+    --danger: #E24C4B;
+    --success: #2AAE6C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 76px; }
+  h1,h2,h3,.brand-font { font-family: 'Poppins', sans-serif; }
+
+  .hero {
+    position: relative;
+    background: linear-gradient(180deg, var(--purple-deep) 0%, var(--purple) 100%);
+    color: #fff;
+    padding: 18px 20px 60px;
+    overflow: hidden;
+  }
+  .hero-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .brand-row { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; }
+  .brand-row svg { width: 26px; height: 26px; }
+  .hero-status { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 24px; margin-top: 6px; }
+  .hero-sub { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+  .skyline { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; z-index: 0; }
+  .hero-content { position: relative; z-index: 1; }
+
+  main { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+  .card {
+    background: var(--card-bg); border-radius: 14px; padding: 18px;
+    margin-top: -34px; margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(36,20,54,0.08);
+    position: relative; z-index: 2;
+  }
+  .card.tight { margin-top: 14px; }
+  .pill-btn { width: 100%; padding: 15px; border: none; border-radius: 30px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: 'Poppins', sans-serif; }
+  .btn-purple { background: var(--purple); color: #fff; }
+  .btn-gold { background: var(--gold); color: var(--purple-deep); }
+  .btn-outline { background: transparent; border: 2px solid var(--purple); color: var(--purple-light); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-flat { background: #F0EBFA; color: var(--purple-deep); }
+  button { font-family: inherit; }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin: 12px 0 6px; }
+  label:first-child { margin-top: 0; }
+  input, select { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 8px; font-size: 15px; font-family: inherit; background: #0F0D14; color: var(--text); }
+  input:focus, select:focus { outline: none; border-color: var(--purple); }
+
+  .loc-box { border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; margin-bottom: 4px; }
+  .loc-box .loc-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+  .loc-box .loc-value { font-size: 14px; font-weight: 600; }
+  .loc-btn { margin-top: 8px; width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: 600; font-size: 13px; background: #F0EBFA; color: var(--purple); }
+
+  /* ===== Address search (autocomplete dropdown) ===== */
+  .search-wrap { position: relative; }
+  .search-results {
+    position: absolute; left: 0; right: 0; top: 100%; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-top: none; border-radius: 0 0 8px 8px;
+    max-height: 220px; overflow-y: auto; z-index: 50; box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  }
+  .search-result-item { padding: 11px 12px; font-size: 13px; border-bottom: 1px solid var(--card-border); cursor: pointer; color: var(--text); }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:active { background: #F0EBFA; }
+  .search-loading { padding: 10px 12px; font-size: 12px; color: var(--text-muted); }
+
+  #destMap { width: 100%; height: 240px; border-radius: 10px; margin: 8px 0; }
+
+  .status-section { text-align: center; }
+  .status-icon { width: 60px; height: 60px; border-radius: 50%; background: #F0EBFA; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px; }
+  .status-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .status-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #F0EBFA; color: var(--purple); margin-bottom: 10px; }
+
+  .driver-info { background: var(--bg); border-radius: 10px; padding: 14px; text-align: left; margin: 14px 0; overflow: hidden; }
+  .driver-info .name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+  .driver-info .phone { font-size: 13px; color: var(--text-muted); }
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .action-grid a, .action-grid button { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: none; }
+  .btn-call { background: #E3F7EC; color: var(--success); }
+  .btn-wa { background: #E3F2FD; color: #1E6FD9; }
+
+  .route-summary { font-size: 13px; color: var(--text-muted); text-align: left; margin: 14px 0; line-height: 1.6; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .pickup-dot { background: var(--river); }
+  .drop-dot { background: var(--gold); }
+
+  .btn-secondary { background: #2A2440; color: var(--purple-light); }
+
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); display: flex; border-top: 1px solid var(--card-border); z-index: 10; }
+  .tab { flex: 1; text-align: center; padding: 10px 0 8px; cursor: pointer; color: var(--text-muted); font-size: 11px; font-weight: 600; }
+  .tab.active { color: var(--purple); }
+  .tab svg { display: block; margin: 0 auto 3px; width: 22px; height: 22px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; z-index: 100; }
+  .modal-sheet { background: var(--card-bg); border-radius: 20px 20px 0 0; padding: 22px; width: 100%; max-width: 480px; margin: 0 auto; }
+  .modal-sheet h3 { margin-bottom: 14px; }
+  .reason-option { display: block; width: 100%; text-align: left; padding: 13px; margin-bottom: 8px; border: 1px solid var(--card-border); border-radius: 10px; background: #0F0D14; font-size: 14px; color: var(--text); }
+  .reason-option:active { background: #F0EBFA; border-color: var(--purple); }
+
+  .star-row { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
+  .star-row span { font-size: 34px; cursor: pointer; color: #ddd; }
+  .star-row span.filled { color: var(--gold); }
+
+  .trip-row { padding: 14px 0; border-bottom: 1px solid var(--card-border); }
+  .trip-row:last-child { border-bottom: none; }
+  .trip-top { display: flex; justify-content: space-between; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+  .section-title { font-weight: 700; font-size: 15px; margin: 18px 0 10px; }
+  .credit-line { text-align: center; font-size: 12px; color: #aaa; margin: 24px 0 10px; }
+</style>
+</head>
+<body>
+
+<div id="authScreen" style="display:none; max-width:400px; margin:60px auto 0; padding:0 20px;">
+  <div style="text-align:center; margin-bottom:20px;">
+    <div style="font-family:'Poppins',sans-serif; font-weight:700; font-size:22px; color:var(--purple-deep);">GOGUWAHATI</div>
+    <div style="font-size:13px; color:var(--text-muted);">Book a ride</div>
+  </div>
+  <div class="card">
+    <div id="authLoginForm">
+      <label>Email</label>
+      <input id="loginEmailInput" type="email" placeholder="you@example.com">
+      <label>Password</label>
+      <input id="loginPassInput" type="password" placeholder="Your password">
+      <button class="pill-btn btn-purple" style="margin-top:14px;" id="btnDoLogin">Login</button>
+      <div style="text-align:center; margin-top:12px; font-size:13px;">
+        <a href="#" id="linkForgotPass" style="color:var(--purple);">Forgot password?</a>
+      </div>
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--text-muted);">
+        New here? <a href="#" id="linkToRegister" style="color:var(--purple); font-weight:600;">Create account</a>
+      </div>
+    </div>
+    <div id="authRegisterForm" style="display:none;">
+      <label>Full Name</label>
+      <input id="regNameInput" type="text" placeholder="Your name">
+      <label>Phone / WhatsApp Number</label>
+      <input id="regPhoneInput" type="tel" placeholder="e.g. 91XXXXXXXXXX">
+      <label>Email</label>
+      <input id="regEmailInput" type="email" placeholder="you@example.com">
+      <label>Password</label>
+      <input id="regPassInput" type="password" placeholder="At least 6 characters">
+      <button class="pill-btn btn-purple" style="margin-top:14px;" id="btnDoRegister">Create Account</button>
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--text-muted);">
+        Already have an account? <a href="#" id="linkToLogin" style="color:var(--purple); font-weight:600;">Login</a>
+      </div>
+    </div>
+    <div id="authError" style="color:var(--danger); font-size:13px; margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<div id="appShell" style="display:none;">
+
+<div class="hero">
+  <svg class="skyline" viewBox="0 0 400 70" preserveAspectRatio="none">
+    <path d="M0,70 L0,45 Q40,20 80,42 T160,38 Q200,15 240,40 T320,35 Q360,20 400,45 L400,70 Z" fill="#3a2456" opacity="0.8"/>
+    <path d="M0,70 L0,55 Q50,60 100,52 T200,55 Q250,48 300,54 T400,55 L400,70 Z" fill="var(--river)" opacity="0.55"/>
+    <g transform="translate(190,18)" fill="var(--gold)" opacity="0.9">
+      <path d="M10,26 L10,10 Q10,4 15,4 Q20,4 20,10 L20,26 Z"/>
+      <circle cx="15" cy="3" r="3"/>
+      <path d="M2,26 L28,26 L28,20 L2,20 Z"/>
+    </g>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-top">
+      <div class="brand-row">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="var(--purple-light)"/><circle cx="12" cy="9" r="3.4" fill="#241436"/><path d="M6 19c0-3 2.7-5 6-5s6 2 6 5" stroke="#241436" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        GOGUWAHATI <span style="opacity:0.7; font-weight:500;">Rider</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button id="btnInstallHeader" title="Install App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">📲</button>
+        <button id="btnShareHeader" title="Share App" style="background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; color:#fff; font-size:15px;">🔗</button>
+      </div>
+    </div>
+    <div class="hero-status" id="heroStatus">Loading…</div>
+    <div class="hero-sub" id="heroSub"></div>
+  </div>
+</div>
+
+<main>
+  <div id="tab-home"></div>
+  <div id="tab-history" style="display:none;"></div>
+  <div id="tab-menu" style="display:none;"></div>
+</main>
+
+<div class="tabbar">
+  <div class="tab active" data-tab="home" onclick="switchTab('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
+    Home
+  </div>
+  <div class="tab" data-tab="history" onclick="switchTab('history')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    History
+  </div>
+  <div class="tab" data-tab="menu" onclick="switchTab('menu')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    Menu
+  </div>
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ================= FIREBASE CONFIG =================
+const firebaseConfig = {
+  apiKey: "AIzaSyAGk0uKDDBmSb-IaXRyk2cYp8FfVyhm1w4",
+  authDomain: "goguwahati-bf146.firebaseapp.com",
+  databaseURL: "https://goguwahati-bf146-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "goguwahati-bf146",
+  storageBucket: "goguwahati-bf146.firebasestorage.app",
+  messagingSenderId: "931264152406",
+  appId: "1:931264152406:web:cd9c56f402a13e12088cf7"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const auth = firebase.auth();
+
+// ================= STATE =================
+let riderId = null;
+let riderProfile = null;
+let authReady = false;
+let activeRequestId = localStorage.getItem('gg_activeRequestId') || null;
+let currentTab = 'home';
+let cachedDriverPhoto = null;
+let cachedDriverPhotoId = null;
+let pickupCoords = null; // {lat, lng, label}
+let destCoords = null; // {lat, lng, label}
+let selectedVehicleType = 'Car'; // defaults to Car; rider can change via the booking form buttons
+let extraStops = []; // array of {lat,lng,label} or null (not yet set) — up to 3
+let destMapInstance = null;
+let destMarker = null;
+let lastKnownRideStatus = null; // used to detect the accepted -> in_progress transition (driver arrived & picked up)
+
+// Mappls (MapmyIndia) REST API key — used for address autocomplete since it
+// has much better coverage of small Indian places (schools, shops, local
+// landmarks) than OpenStreetMap. Domain-restricted to heaven948.github.io.
+const MAPPLS_KEY = "zhxouvfqxyblexundbqpmktyrpcpgemybzfx";
+
+// ================= APP THEME (rider-chosen, saved locally on this device) =================
+const THEMES = {
+  purple: { purple:'#6D3FC7', purpleDeep:'#241436', purpleLight:'#9B7FE8', gold:'#F2B705', river:'#3E8FB0', bg:'#0A0A0C' },
+  ocean:  { purple:'#1E6FD9', purpleDeep:'#0B2A4A', purpleLight:'#6FA8E8', gold:'#F2B705', river:'#3E8FB0', bg:'#060B10' },
+  sunset: { purple:'#D9631E', purpleDeep:'#3A1406', purpleLight:'#F0946A', gold:'#F2B705', river:'#E28743', bg:'#120A06' },
+  forest: { purple:'#2E8B57', purpleDeep:'#0F2B1D', purpleLight:'#7FCB9E', gold:'#F2B705', river:'#3E8FB0', bg:'#05100A' }
+};
+let currentTheme = localStorage.getItem('gg_rider_theme') || 'purple';
+function applyTheme(name) {
+  const t = THEMES[name] || THEMES.purple;
+  const root = document.documentElement.style;
+  root.setProperty('--purple', t.purple);
+  root.setProperty('--purple-deep', t.purpleDeep);
+  root.setProperty('--purple-light', t.purpleLight);
+  root.setProperty('--gold', t.gold);
+  root.setProperty('--river', t.river);
+  root.setProperty('--bg', t.bg);
+  currentTheme = name;
+  localStorage.setItem('gg_rider_theme', name);
+}
+applyTheme(currentTheme); // apply immediately on load, before first render, so there's no flash of the default theme
+
+const heroStatus = document.getElementById('heroStatus');
+const heroSub = document.getElementById('heroSub');
+const tabHome = document.getElementById('tab-home');
+const tabHistory = document.getElementById('tab-history');
+const tabMenu = document.getElementById('tab-menu');
+const authScreen = document.getElementById('authScreen');
+const appShell = document.getElementById('appShell');
+
+heroStatus.textContent = 'Connecting…';
+
+// ================= SOUND ALERTS (Web Audio, no files needed) =================
+// Same autoplay-policy fix as the driver app: audio only plays reliably if a
+// user tap has "unlocked" it first. We unlock on the first tap anywhere, and
+// explicitly on Login/Register/Book Ride (all real taps).
+let audioCtx;
+let audioUnlocked = false;
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function unlockAudio() {
+  if (audioUnlocked) return;
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  playTone(440, 0.01, 0);
+  audioUnlocked = true;
+}
+function playTone(freq, duration, delay, type='sine') {
+  const ctx = getCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.001, ctx.currentTime + delay);
+  gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + delay + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(ctx.currentTime + delay);
+  osc.stop(ctx.currentTime + delay + duration + 0.05);
+}
+// Driver arrived & picked you up (accepted -> in_progress)
+function playDriverArrivedSound() {
+  playTone(1200, 0.15, 0);
+  playTone(1200, 0.15, 0.22);
+  playTone(1200, 0.15, 0.44);
+}
+// Driver accepted your request
+function playDriverAssignedSound() {
+  playTone(700, 0.16, 0);
+  playTone(950, 0.22, 0.18);
+}
+function playCancelSound() {
+  playTone(400, 0.3, 0, 'sawtooth');
+  playTone(280, 0.4, 0.28, 'sawtooth');
+}
+
+// Straight-line ("as the crow flies") distance in km between two GPS
+// points — free, simple math, no directions API needed. Not actual road
+// distance, but a fair, honest approximation for "how far away" the driver
+// currently is.
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Embedded live map showing the driver's marker on an actual map (not just
+// a distance number) — free OpenStreetMap tiles, same as the booking
+// screen's map. Redrawn fresh each time the driver's position updates
+// (~every 6 seconds), which keeps both the driver and the pickup/
+// destination point correctly framed, at the small cost of the view
+// re-centering each refresh rather than preserving a rider's manual pan/zoom.
+let liveRideMapInstance = null;
+function renderLiveRideMap(ride) {
+  const container = document.getElementById('liveRideMap');
+  if (!container || !ride.driverLiveLat || !ride.driverLiveLng) return;
+
+  if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
+
+  liveRideMapInstance = L.map('liveRideMap', { zoomControl: false, attributionControl: false, scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(liveRideMapInstance);
+
+  const driverLatLng = [ride.driverLiveLat, ride.driverLiveLng];
+  const driverIcon = L.divIcon({
+    className: '',
+    html: '<div style="background:#6D3FC7; width:18px; height:18px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 6px rgba(0,0,0,0.5);"></div>',
+    iconSize: [18, 18]
+  });
+  L.marker(driverLatLng, { icon: driverIcon }).addTo(liveRideMapInstance);
+
+  const targetLat = ride.status === 'accepted' ? ride.pickupLat : ride.destLat;
+  const targetLng = ride.status === 'accepted' ? ride.pickupLng : ride.destLng;
+  if (targetLat && targetLng) {
+    const targetIcon = L.divIcon({
+      className: '',
+      html: '<div style="background:#F2B705; width:16px; height:16px; border-radius:50%; border:3px solid #241436;"></div>',
+      iconSize: [16, 16]
+    });
+    L.marker([targetLat, targetLng], { icon: targetIcon }).addTo(liveRideMapInstance);
+    liveRideMapInstance.fitBounds([driverLatLng, [targetLat, targetLng]], { padding: [28, 28] });
+  } else {
+    liveRideMapInstance.setView(driverLatLng, 14);
+  }
+}
+
+function playChatMessageSound() {
+  playTone(720, 0.1, 0);
+  playTone(960, 0.14, 0.1);
+}
+document.addEventListener('click', unlockAudio, { once: true });
+document.addEventListener('touchstart', unlockAudio, { once: true });
+
+// ================= AUTH =================
+auth.onAuthStateChanged(user => {
+  if (user) {
+    riderId = user.uid;
+    authReady = true;
+    authScreen.style.display = 'none';
+    appShell.style.display = 'block';
+    setupInstallShare('btnInstallHeader', 'btnShareHeader');
+    loadRiderProfile();
+  } else {
+    riderId = null;
+    authReady = false;
+    authScreen.style.display = 'block';
+    appShell.style.display = 'none';
+  }
+});
+
+function showAuthMode(mode) {
+  document.getElementById('authLoginForm').style.display = mode === 'login' ? 'block' : 'none';
+  document.getElementById('authRegisterForm').style.display = mode === 'register' ? 'block' : 'none';
+}
+document.getElementById('linkToRegister').addEventListener('click', () => showAuthMode('register'));
+document.getElementById('linkToLogin').addEventListener('click', () => showAuthMode('login'));
+
+document.getElementById('btnDoLogin').addEventListener('click', () => {
+  unlockAudio();
+  const email = document.getElementById('loginEmailInput').value.trim();
+  const pass = document.getElementById('loginPassInput').value;
+  const errEl = document.getElementById('authError');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Enter email and password.'; return; }
+  auth.signInWithEmailAndPassword(email, pass).catch(err => errEl.textContent = err.message);
+});
+
+document.getElementById('btnDoRegister').addEventListener('click', () => {
+  unlockAudio();
+  const name = document.getElementById('regNameInput').value.trim();
+  const phone = document.getElementById('regPhoneInput').value.trim();
+  const email = document.getElementById('regEmailInput').value.trim();
+  const pass = document.getElementById('regPassInput').value;
+  const errEl = document.getElementById('authError');
+  errEl.textContent = '';
+  if (!name || !phone || !email || pass.length < 6) { errEl.textContent = 'Fill all fields (password min 6 characters).'; return; }
+  auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+    return db.ref('riders/' + cred.user.uid).set({ name, phone, registeredAt: Date.now() });
+  }).catch(err => errEl.textContent = err.message);
+});
+
+document.getElementById('linkForgotPass').addEventListener('click', () => {
+  const email = document.getElementById('loginEmailInput').value.trim();
+  if (!email) { alert('Enter your email above first.'); return; }
+  auth.sendPasswordResetEmail(email).then(() => alert('Password reset email sent.')).catch(err => alert(err.message));
+});
+
+function loadRiderProfile() {
+  db.ref('riders/' + riderId).on('value', snapshot => {
+    riderProfile = snapshot.val() || null;
+    renderHome();
+  });
+}
+
+function isBlocked() { return riderProfile && riderProfile.blocked === true; }
+
+// ================= TABS =================
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  tabHome.style.display = tab === 'home' ? 'block' : 'none';
+  tabHistory.style.display = tab === 'history' ? 'block' : 'none';
+  tabMenu.style.display = tab === 'menu' ? 'block' : 'none';
+  if (tab === 'history') renderHistory();
+  if (tab === 'menu') renderMenu();
+}
+
+// ================= HOME =================
+function renderHome() {
+  if (!authReady) { heroStatus.textContent = 'Connecting…'; return; }
+
+  if (!riderProfile) {
+    heroStatus.textContent = 'Almost there!';
+    heroSub.textContent = 'Complete your profile to continue';
+    renderCompleteProfileForm();
+    return;
+  }
+
+  if (isBlocked()) {
+    heroStatus.textContent = 'Account Suspended';
+    heroSub.textContent = 'Your access has been restricted';
+    renderBlockedScreen();
+    return;
+  }
+
+  if (activeRequestId) {
+    watchRequest(activeRequestId);
+    return;
+  }
+
+  heroStatus.textContent = 'Where to?';
+  heroSub.textContent = 'Book a ride in a few taps';
+  renderBookingForm();
+}
+
+function renderCompleteProfileForm() {
+  tabHome.innerHTML = `
+    <div class="card">
+      <label>Full Name</label>
+      <input id="fixName" type="text" placeholder="Your name">
+      <label>Phone / WhatsApp Number</label>
+      <input id="fixPhone" type="tel" placeholder="e.g. 91XXXXXXXXXX">
+      <button class="pill-btn btn-purple" style="margin-top:18px;" id="btnFixProfile">Continue</button>
+    </div>
+  `;
+  document.getElementById('btnFixProfile').addEventListener('click', () => {
+    const name = document.getElementById('fixName').value.trim();
+    const phone = document.getElementById('fixPhone').value.trim();
+    if (!name || !phone) { alert('Please fill in both fields.'); return; }
+    db.ref('riders/' + riderId).set({ name, phone, registeredAt: Date.now() });
+  });
+}
+
+function renderBlockedScreen() {
+  tabHome.innerHTML = `
+    <div class="card">
+      <div style="text-align:center; padding:20px 10px;">
+        <div style="font-size:40px; margin-bottom:10px;">🚫</div>
+        <div style="font-weight:700; font-size:17px; margin-bottom:8px;">Account Suspended</div>
+        <div style="font-size:13px; color:var(--text-muted); line-height:1.6;">Your account has been suspended by GOGUWAHATI. Contact support if you believe this is a mistake.</div>
+      </div>
+    </div>
+  `;
+}
+
+// ================= BOOKING FORM =================
+function renderBookingForm() {
+  const homeChip = riderProfile.homeAddress ? `<button type="button" class="saved-place-chip" data-target="pickup" data-lat="${riderProfile.homeAddress.lat}" data-lng="${riderProfile.homeAddress.lng}" data-label="${riderProfile.homeAddress.label.replace(/"/g,'&quot;')}" style="padding:8px 14px; border-radius:20px; border:1px solid var(--card-border); background:#0F0D14; color:var(--text); font-size:12px; font-weight:600;">🏠 Home</button>` : '';
+  const workChip = riderProfile.workAddress ? `<button type="button" class="saved-place-chip" data-target="pickup" data-lat="${riderProfile.workAddress.lat}" data-lng="${riderProfile.workAddress.lng}" data-label="${riderProfile.workAddress.label.replace(/"/g,'&quot;')}" style="padding:8px 14px; border-radius:20px; border:1px solid var(--card-border); background:#0F0D14; color:var(--text); font-size:12px; font-weight:600;">💼 Work</button>` : '';
+  const homeChipDest = riderProfile.homeAddress ? homeChip.replace('data-target="pickup"', 'data-target="dest"') : '';
+  const workChipDest = riderProfile.workAddress ? workChip.replace('data-target="pickup"', 'data-target="dest"') : '';
+
+  tabHome.innerHTML = `
+    <div class="card">
+      <label>Pickup Location</label>
+      ${(homeChip || workChip) ? `<div style="display:flex; gap:8px; margin-bottom:8px;">${homeChip}${workChip}</div>` : ''}
+      <div class="search-wrap">
+        <input id="pickupSearch" type="text" placeholder="Type an address, or use GPS below…" autocomplete="off">
+        <div id="pickupResults" class="search-results" style="display:none;"></div>
+      </div>
+      <div class="loc-box" style="margin-top:8px;">
+        <div class="loc-label">Selected pickup</div>
+        <div class="loc-value" id="pickupLabel">Not set</div>
+        <button class="loc-btn" id="btnUseLocation">📍 Use My Current Location</button>
+      </div>
+
+      <label>Destination</label>
+      ${(homeChipDest || workChipDest) ? `<div style="display:flex; gap:8px; margin-bottom:8px;">${homeChipDest}${workChipDest}</div>` : ''}
+      <div class="search-wrap">
+        <input id="destSearch" type="text" placeholder="Type your destination address…" autocomplete="off">
+        <div id="destResults" class="search-results" style="display:none;"></div>
+      </div>
+      <div class="loc-box" style="margin-top:8px;">
+        <div class="loc-label">Selected destination</div>
+        <div class="loc-value" id="destLabel">Not set</div>
+      </div>
+      <div id="destMap"></div>
+
+      <div id="stopsContainer"></div>
+      <button type="button" id="btnAddStop" style="width:100%; margin-top:10px; padding:10px; border-radius:8px; border:1px dashed var(--card-border); background:transparent; color:var(--text-muted); font-size:13px; font-weight:600;">+ Add a Stop</button>
+
+      <label>Vehicle Type</label>
+      <div style="display:flex; gap:8px;" id="vehicleTypeButtons">
+        <button type="button" class="vehicle-type-btn" data-type="Bike" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🏍️<br>Bike</button>
+        <button type="button" class="vehicle-type-btn" data-type="Auto" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🛺<br>Auto</button>
+        <button type="button" class="vehicle-type-btn" data-type="Car" style="flex:1; padding:12px 6px; border-radius:10px; border:2px solid var(--card-border); background:#0F0D14; font-size:13px; font-weight:600; color:var(--text-muted);">🚗<br>Car</button>
+      </div>
+
+      <label>Fare Offer (₹)</label>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-weight:700;">₹</span>
+        <input id="inpFare" type="number" placeholder="e.g. 150">
+      </div>
+
+      <button class="pill-btn btn-purple" style="margin-top:18px;" id="btnBook">Book Ride</button>
+      <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:10px;">Address search and map powered by Mappls</div>
+    </div>
+  `;
+
+  document.querySelectorAll('.saved-place-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const lat = parseFloat(chip.dataset.lat), lng = parseFloat(chip.dataset.lng), label = chip.dataset.label;
+      if (chip.dataset.target === 'pickup') {
+        pickupCoords = { lat, lng, label };
+        document.getElementById('pickupLabel').textContent = label;
+        document.getElementById('pickupSearch').value = label;
+      } else {
+        destCoords = { lat, lng, label };
+        document.getElementById('destLabel').textContent = label;
+        document.getElementById('destSearch').value = label;
+        if (destMapInstance) {
+          try {
+            if (destMapProvider === 'mappls') {
+              destMapInstance.setCenter({ lat, lng });
+              if (destMarker && destMarker.remove) destMarker.remove();
+              destMarker = new mappls.Marker({ map: destMapInstance, position: { lat, lng } });
+            } else {
+              destMapInstance.setView([lat, lng], 15);
+              if (destMarker) destMapInstance.removeLayer(destMarker);
+              destMarker = L.marker([lat, lng]).addTo(destMapInstance);
+            }
+          } catch (err) { console.warn(err.message); }
+        }
+      }
+    });
+  });
+
+  extraStops = [];
+  renderStopsUI();
+  document.getElementById('btnAddStop').addEventListener('click', () => {
+    if (extraStops.length >= 3) { alert('You can add up to 3 stops.'); return; }
+    extraStops.push(null);
+    renderStopsUI();
+  });
+
+  document.querySelectorAll('.vehicle-type-btn').forEach(btn => {
+    if (btn.dataset.type === selectedVehicleType) {
+      btn.style.borderColor = 'var(--purple)';
+      btn.style.background = '#2A2440';
+      btn.style.color = '#fff';
+    }
+    btn.addEventListener('click', () => {
+      selectedVehicleType = btn.dataset.type;
+      document.querySelectorAll('.vehicle-type-btn').forEach(b => {
+        b.style.borderColor = b === btn ? 'var(--purple)' : 'var(--card-border)';
+        b.style.background = b === btn ? '#2A2440' : '#0F0D14';
+        b.style.color = b === btn ? '#fff' : 'var(--text-muted)';
+      });
+    });
+  });
+
+  initDestMap();
+  setupAddressSearch('pickupSearch', 'pickupResults', (lat, lng, label) => {
+    pickupCoords = { lat, lng, label };
+    document.getElementById('pickupLabel').textContent = label;
+    document.getElementById('btnUseLocation').textContent = '📍 Update My Location';
+  });
+  setupAddressSearch('destSearch', 'destResults', (lat, lng, label) => {
+    destCoords = { lat, lng, label };
+    document.getElementById('destLabel').textContent = label;
+    // Move the map + marker to match the typed address so the pin and the
+    // text box always agree, and so the rider can still fine-tune by tapping.
+    if (!destMapInstance) return;
+    try {
+      if (destMapProvider === 'mappls') {
+        destMapInstance.setCenter({ lat, lng });
+        if (destMarker && destMarker.remove) destMarker.remove();
+        destMarker = new mappls.Marker({ map: destMapInstance, position: { lat, lng } });
+      } else {
+        destMapInstance.setView([lat, lng], 15);
+        if (destMarker) destMapInstance.removeLayer(destMarker);
+        destMarker = L.marker([lat, lng]).addTo(destMapInstance);
+      }
+    } catch (err) {
+      console.warn('Could not update destination marker:', err.message);
+    }
+  });
+
+  document.getElementById('btnUseLocation').addEventListener('click', () => {
+    const btn = document.getElementById('btnUseLocation');
+    btn.textContent = 'Locating…';
+    if (!navigator.geolocation) { alert('GPS not supported on this device/browser.'); btn.textContent = '📍 Use My Current Location'; return; }
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude, lng = pos.coords.longitude;
+      reverseGeocode(lat, lng, label => {
+        pickupCoords = { lat, lng, label };
+        document.getElementById('pickupLabel').textContent = label;
+        document.getElementById('pickupSearch').value = label;
+        btn.textContent = '📍 Update My Location';
+      });
+    }, err => {
+      alert('Could not get your location: ' + err.message);
+      btn.textContent = '📍 Use My Current Location';
+    });
+  });
+
+  document.getElementById('btnBook').addEventListener('click', () => { unlockAudio(); submitRequest(); });
+}
+
+// Live address search tries Mappls (MapmyIndia) first — it has much deeper
+// coverage of small Indian places (local schools, shops, landmarks) than
+// OpenStreetMap. Mappls' autosuggest only returns a place ID ("eLoc"), not
+// coordinates — so once the rider picks a suggestion, one more call resolves
+// that eLoc into an actual lat/lng before the pin gets placed. If Mappls
+// fails at any step (key/domain issue, network error, unexpected response),
+// it automatically falls back to Photon/Nominatim so the search always works.
+function setupAddressSearch(inputId, resultsId, onSelect) {
+  const input = document.getElementById(inputId);
+  const resultsBox = document.getElementById(resultsId);
+  let debounceTimer = null;
+  let activeToken = 0;
+
+  function searchMappls(query, myToken) {
+    return fetch(`https://search.mappls.com/search/places/autosuggest/json?query=${encodeURIComponent(query)}&location=26.1445,91.7362&region=IND&access_token=${MAPPLS_KEY}`)
+      .then(r => { if (!r.ok) throw new Error('Mappls HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const raw = data.suggestedLocations || [];
+        if (!raw.length) throw new Error('Mappls: no results');
+        const items = raw.map(loc => ({
+          label: loc.placeAddress || loc.placeName || '',
+          eLoc: loc.eLoc
+        })).filter(it => it.label && it.eLoc);
+        if (!items.length) throw new Error('Mappls: unusable results');
+        showResults(items, myToken);
+      });
+  }
+
+  function searchPhoton(query, myToken) {
+    return fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=6&lon=91.7362&lat=26.1445`)
+      .then(r => { if (!r.ok) throw new Error('Photon HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        const features = (data && data.features) || [];
+        const items = features.map(f => ({
+          label: [f.properties.name, f.properties.street, f.properties.city || f.properties.district, f.properties.state, f.properties.country]
+            .filter(Boolean).filter((v, i, arr) => arr.indexOf(v) === i).join(', '),
+          lat: f.geometry.coordinates[1],
+          lon: f.geometry.coordinates[0]
+        }));
+        showResults(items, myToken);
+      });
+  }
+
+  // Mappls' free tier returns a place ID ("eLoc") from Autosuggest but does
+  // NOT return coordinates for it — converting eLoc to lat/lng is a premium
+  // (paid) feature on their platform. Instead, once a rider picks a Mappls
+  // suggestion, we resolve its full address text through a single one-off
+  // Nominatim lookup — this works much better than Nominatim's own live
+  // search, since a complete address string geocodes far more reliably than
+  // a bare business name typed a few letters at a time.
+  function resolveAddressCoords(label) {
+    return fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(label)}`)
+      .then(r => r.json())
+      .then(results => {
+        if (!results || !results.length) throw new Error('Could not locate that address on the map');
+        return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+      });
+  }
+
+  function showResults(items, myToken) {
+    if (myToken !== activeToken) return;
+    if (items.length === 0) { resultsBox.innerHTML = `<div class="search-loading">No matches found</div>`; return; }
+    resultsBox.innerHTML = items.map((it, i) => `<div class="search-result-item" data-idx="${i}">${it.label}</div>`).join('');
+    resultsBox.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const it = items[item.dataset.idx];
+        input.value = it.label;
+        resultsBox.innerHTML = `<div class="search-loading">Pinpointing location…</div>`;
+        if (it.eLoc) {
+          // Mappls result — resolve its address text into coordinates
+          resolveAddressCoords(it.label)
+            .then(coords => { resultsBox.style.display = 'none'; onSelect(coords.lat, coords.lon, it.label); })
+            .catch(() => {
+              resultsBox.style.display = 'none';
+              alert('Found the address but could not pinpoint it on the map — please try tapping the map directly, or pick a different suggestion.');
+            });
+        } else {
+          // Photon result — coordinates already included
+          resultsBox.style.display = 'none';
+          onSelect(it.lat, it.lon, it.label);
+        }
+      });
+    });
+  }
+
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    clearTimeout(debounceTimer);
+    if (query.length < 3) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
+    resultsBox.style.display = 'block';
+    resultsBox.innerHTML = `<div class="search-loading">Searching…</div>`;
+    const myToken = ++activeToken;
+    debounceTimer = setTimeout(() => {
+      let mapplsError = '';
+      searchMappls(query, myToken)
+        .catch(err => {
+          mapplsError = (err && err.message) || 'unknown Mappls error';
+          console.warn('Mappls search failed, falling back to Photon:', mapplsError);
+          return searchPhoton(query, myToken);
+        })
+        .catch(err => {
+          if (myToken !== activeToken) return;
+          const photonError = (err && err.message) || 'unknown Photon error';
+          console.error('Both Mappls and Photon failed:', mapplsError, photonError);
+          resultsBox.innerHTML = `<div class="search-loading">Search failed.<br><small>Mappls: ${mapplsError}<br>Photon: ${photonError}</small></div>`;
+        });
+    }, 350);
+  });
+
+  document.addEventListener('click', e => {
+    if (e.target !== input) resultsBox.style.display = 'none';
+  });
+}
+
+// Loads Mappls' Map SDK script once (lazily, only when a map is actually
+// needed). If it fails to load or errors for any reason — free-tier
+// restriction, network issue, wrong response — the destination preview
+// automatically falls back to the OpenStreetMap/Leaflet map that was
+// already working, so the booking form never breaks either way.
+let mapplsSdkPromise = null;
+function loadMapplsSdk() {
+  if (mapplsSdkPromise) return mapplsSdkPromise;
+  mapplsSdkPromise = new Promise((resolve, reject) => {
+    if (window.mappls) { resolve(window.mappls); return; }
+    const script = document.createElement('script');
+    script.src = `https://sdk.mappls.com/map/sdk/web?v=3.0&access_token=${MAPPLS_KEY}`;
+    script.onload = () => { window.mappls ? resolve(window.mappls) : reject(new Error('Mappls SDK loaded but mappls object missing')); };
+    script.onerror = () => reject(new Error('Mappls SDK script failed to load'));
+    document.head.appendChild(script);
+    setTimeout(() => reject(new Error('Mappls SDK load timed out')), 8000);
+  });
+  return mapplsSdkPromise;
+}
+
+let destMapProvider = null; // 'mappls' or 'leaflet' — whichever actually ended up loading
+
+// Renders the "extra stop" rows between pickup and destination. Each stop
+// is its own tiny address search; results are stored positionally in
+// extraStops so the driver sees them in the right order.
+function renderStopsUI() {
+  const container = document.getElementById('stopsContainer');
+  if (!container) return;
+  container.innerHTML = extraStops.map((stop, i) => `
+    <div style="margin-top:10px;">
+      <label>Stop ${i + 1}</label>
+      <div style="display:flex; gap:6px; align-items:flex-start;">
+        <div class="search-wrap" style="flex:1;">
+          <input id="stopSearch${i}" type="text" placeholder="Type a stop address…" autocomplete="off" value="${stop ? stop.label.replace(/"/g, '&quot;') : ''}">
+          <div id="stopResults${i}" class="search-results" style="display:none;"></div>
+        </div>
+        <button type="button" onclick="removeStop(${i})" style="padding:12px 14px; border:none; border-radius:8px; background:#2A2440; color:var(--danger); font-weight:700;">✕</button>
+      </div>
+    </div>
+  `).join('');
+  extraStops.forEach((stop, i) => {
+    setupAddressSearch(`stopSearch${i}`, `stopResults${i}`, (lat, lng, label) => {
+      extraStops[i] = { lat, lng, label };
+    });
+  });
+}
+function removeStop(i) {
+  extraStops.splice(i, 1);
+  renderStopsUI();
+}
+
+function initDestMap() {
+  setTimeout(() => {
+    const container = document.getElementById('destMap');
+    if (!container) return;
+    // Read-only preview map: no click-to-pin, since a tourist/rider unfamiliar
+    // with the area has no way to know which exact spot to tap. Destination
+    // is set purely via the search bar; the marker below is placed
+    // automatically once a search result is picked (see setupAddressSearch's
+    // onSelect for destSearch).
+    loadMapplsSdk().then(mappls => {
+      destMapProvider = 'mappls';
+      destMapInstance = new mappls.Map('destMap', { center: { lat: 26.1445, lng: 91.7362 }, zoomControl: false });
+    }).catch(err => {
+      console.warn('Mappls map unavailable, falling back to OpenStreetMap:', err.message);
+      destMapProvider = 'leaflet';
+      destMapInstance = L.map('destMap', { dragging: true, scrollWheelZoom: false, tap: false }).setView([26.1445, 91.7362], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(destMapInstance);
+    });
+  }, 50);
+}
+
+function reverseGeocode(lat, lng, callback) {
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(r => r.json())
+    .then(data => callback(data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`))
+    .catch(() => callback(`${lat.toFixed(4)}, ${lng.toFixed(4)}`));
+}
+
+function submitRequest() {
+  const fareOffer = document.getElementById('inpFare').value.trim();
+  if (!pickupCoords) { alert('Please set your pickup location.'); return; }
+  if (!destCoords) { alert('Please set your destination.'); return; }
+  if (!fareOffer) { alert('Please enter a fare offer.'); return; }
+  if (extraStops.some(s => !s)) { alert('Please finish setting an address for each stop, or remove the empty one.'); return; }
+
+  // A 4-digit OTP the rider shares with the driver only once they've
+  // physically arrived — this confirms both sides that it's genuinely the
+  // matched driver and passenger, not a mix-up or a stranger.
+  const otp = String(Math.floor(1000 + Math.random() * 9000));
+
+  const newRef = db.ref('rideRequests').push();
+  newRef.set({
+    riderId,
+    riderName: riderProfile.name,
+    riderPhone: riderProfile.phone,
+    pickup: pickupCoords.label,
+    pickupLat: pickupCoords.lat,
+    pickupLng: pickupCoords.lng,
+    destination: destCoords.label,
+    destLat: destCoords.lat,
+    destLng: destCoords.lng,
+    stops: extraStops.length ? extraStops : null,
+    fareOffer,
+    vehicleType: selectedVehicleType,
+    otp,
+    status: 'requested',
+    createdAt: Date.now()
+  }).then(() => {
+    activeRequestId = newRef.key;
+    localStorage.setItem('gg_activeRequestId', newRef.key);
+    pickupCoords = null; destCoords = null; extraStops = [];
+    lastKnownRideStatus = 'requested';
+    renderHome();
+  }).catch(() => alert('Could not post request. Please try again.'));
+}
+
+// ================= WATCH ACTIVE REQUEST =================
+let chatNotifyRideId = null;
+let chatNotifyMsgCount = 0;
+
+function watchRequest(id) {
+  db.ref('rideRequests/' + id).on('value', snapshot => {
+    const ride = snapshot.val();
+    if (!ride) { clearActiveRequest(); renderHome(); return; }
+    if (ride.status === 'completed') {
+      db.ref('rideRequests/' + id).off(); // this ride is finalized, stop listening to it
+      stopChatNotifications();
+      if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
+      clearActiveRequest();
+      renderHome(); // dashboard goes straight back to "Book a ride" — the finished ride lives in History, not here
+      openCompletionModal(id, ride);
+      return;
+    }
+    if (ride.status === 'cancelled') {
+      db.ref('rideRequests/' + id).off();
+      stopChatNotifications();
+      if (liveRideMapInstance) { liveRideMapInstance.remove(); liveRideMapInstance = null; }
+      clearActiveRequest();
+      renderCancelledScreen();
+      return;
+    }
+
+    // Sound alerts on status transitions (a driver being newly assigned, or
+    // arriving to pick you up), not on every generic Firebase update.
+    if (lastKnownRideStatus === 'requested' && ride.status === 'accepted') {
+      playDriverAssignedSound();
+    }
+    if (lastKnownRideStatus === 'accepted' && ride.status === 'in_progress') {
+      playDriverArrivedSound();
+    }
+    lastKnownRideStatus = ride.status;
+
+    startChatNotifications(id);
+    heroStatus.textContent = ride.status === 'requested' ? 'Finding a driver…' : ride.status === 'accepted' ? 'Driver assigned!' : 'Ride in progress';
+    heroSub.textContent = '';
+    renderRideStatus(id, ride);
+  });
+}
+
+// Plays a short alert whenever the driver sends a new chat message, even if
+// the chat window isn't currently open, so a rider never misses "I'm here"
+// or "where are you" type messages.
+function startChatNotifications(id) {
+  if (chatNotifyRideId === id) return; // already listening to this ride
+  stopChatNotifications();
+  chatNotifyRideId = id;
+  chatNotifyMsgCount = 0;
+  let firstLoad = true;
+  db.ref('rideRequests/' + id + '/messages').on('value', snap => {
+    const msgs = snap.val() || {};
+    const list = Object.values(msgs).sort((a, b) => a.ts - b.ts);
+    if (!firstLoad && list.length > chatNotifyMsgCount) {
+      const newest = list[list.length - 1];
+      if (newest.sender !== 'rider') playChatMessageSound();
+    }
+    chatNotifyMsgCount = list.length;
+    firstLoad = false;
+  });
+}
+function stopChatNotifications() {
+  if (chatNotifyRideId) { db.ref('rideRequests/' + chatNotifyRideId + '/messages').off(); chatNotifyRideId = null; }
+}
+
+function clearActiveRequest() {
+  activeRequestId = null;
+  localStorage.removeItem('gg_activeRequestId');
+  lastKnownRideStatus = null;
+}
+
+function renderRideStatus(id, ride) {
+  let icon, title, sub, driverBlock = '', cancelBtn = '', offersBlock = '';
+
+  if (ride.status === 'requested') {
+    icon = '🔍'; title = 'Finding a driver…'; sub = 'Waiting for a driver to accept your request';
+    cancelBtn = `<button class="btn-secondary pill-btn" id="btnCancel">Cancel Request</button>`;
+    offersBlock = renderOffers(id, ride.offers);
+  } else if (ride.status === 'accepted' || ride.status === 'in_progress') {
+    icon = ride.status === 'accepted' ? '✅' : '🚗';
+    title = ride.status === 'accepted' ? 'Driver assigned!' : 'Driver arrived — ride in progress';
+    sub = ride.status === 'accepted' ? 'Your driver is on the way' : 'Enjoy your ride!';
+
+    if (cachedDriverPhotoId !== ride.driverId) {
+      db.ref('drivers/' + ride.driverId + '/photoBase64').once('value', snap => {
+        cachedDriverPhoto = snap.val();
+        cachedDriverPhotoId = ride.driverId;
+        renderRideStatus(id, ride);
+      });
+    }
+    const photoHtml = (cachedDriverPhotoId === ride.driverId && cachedDriverPhoto)
+      ? `<img src="${cachedDriverPhoto}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; float:left; margin-right:12px;">`
+      : `<div style="width:54px; height:54px; border-radius:50%; background:#2A2440; float:left; margin-right:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--text-muted);">${(ride.driverName||'D').charAt(0)}</div>`;
+
+    // OTP: shown only while waiting for pickup, so the rider can read it out
+    // to the driver in person to confirm it's genuinely the matched driver.
+    // Once the ride is in progress, that check has already happened, so a
+    // small "Verified" tag replaces it instead of the code.
+    const otpBlock = ride.otp
+      ? (ride.status === 'accepted'
+          ? `<div style="background:#F0EBFA; border-radius:10px; padding:14px; text-align:center; margin:14px 0;">
+               <div style="font-size:12px; color:var(--text-muted);">Share this OTP with your driver ONLY once they've arrived</div>
+               <div style="font-family:'Poppins',sans-serif; font-size:30px; font-weight:800; color:var(--purple-deep); letter-spacing:6px; margin-top:4px;">${ride.otp}</div>
+             </div>`
+          : `<div style="text-align:center; margin:10px 0; font-size:12px; color:var(--success); font-weight:600;">✓ Pickup OTP Verified</div>`)
+      : '';
+
+    // Live location: the driver app writes its GPS position every few
+    // seconds while a ride is active. Distance shown is straight-line
+    // ("as the crow flies"), not actual road distance — an honest
+    // approximation rather than a real routed ETA, which would need a paid
+    // directions API. The map link always opens to wherever the driver
+    // currently is, since it's rebuilt fresh on every location update.
+    let liveLocationBlock = '';
+    if (ride.driverLiveLat && ride.driverLiveLng) {
+      const targetLat = ride.status === 'accepted' ? ride.pickupLat : ride.destLat;
+      const targetLng = ride.status === 'accepted' ? ride.pickupLng : ride.destLng;
+      const distLabel = ride.status === 'accepted' ? 'from your pickup point' : 'from your destination';
+      const mapsLink = `https://www.google.com/maps/search/?api=1&query=${ride.driverLiveLat},${ride.driverLiveLng}`;
+      const secsAgo = Math.round((Date.now() - (ride.driverLiveUpdatedAt || 0)) / 1000);
+      const freshness = secsAgo < 20 ? 'Live' : `Updated ${secsAgo}s ago`;
+      let distanceText = '';
+      if (targetLat && targetLng) {
+        const km = haversineKm(ride.driverLiveLat, ride.driverLiveLng, targetLat, targetLng);
+        distanceText = `<strong>${km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km'}</strong> ${distLabel}`;
+      }
+      liveLocationBlock = `
+        <div id="liveRideMap" style="width:100%; height:200px; border-radius:10px; margin-top:12px; background:#2A2440;"></div>
+        <div style="background:var(--bg); border-radius:0 0 10px 10px; padding:12px 14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div style="font-size:13px;">
+            <span style="color:var(--success); font-weight:700;">● ${freshness}</span>
+            ${distanceText ? '<br>' + distanceText : ''}
+          </div>
+          <a href="${mapsLink}" target="_blank" style="white-space:nowrap; font-size:12px; font-weight:700; color:var(--purple); text-decoration:underline;">Open in Google Maps</a>
+        </div>`;
+    }
+
+    driverBlock = `
+      ${otpBlock}
+      <div class="driver-info" style="overflow:hidden;">
+        ${photoHtml}
+        <div class="name">${ride.driverName}</div>
+        <div class="phone">${ride.driverPhone}${ride.driverVehicle ? ' · ' + ride.driverVehicle : ''}</div>
+        <div class="action-grid" style="grid-template-columns:1fr 1fr; margin-top:8px; clear:both;">
+          <a href="tel:${ride.driverPhone}" class="btn-call">📞 Call</a>
+          <a href="https://wa.me/${ride.driverPhone}" target="_blank" class="btn-wa">💬 WhatsApp</a>
+        </div>
+        <button onclick="openChatModal('${id}','rider','${ride.driverName}')" style="width:100%; margin-top:8px; padding:10px; border-radius:8px; border:none; background:var(--purple); color:#fff; font-weight:700; font-size:13px;">💬 Chat with Driver</button>
+        ${liveLocationBlock}
+      </div>`;
+    cancelBtn = `<button class="btn-secondary pill-btn" onclick="openCancelModal('${id}')" style="margin-top:8px;">Cancel Ride</button>`;
+  }
+
+  // The embedded live map's container above only exists once the card's
+  // HTML has actually been written to the page (it's set just below), so
+  // draw the map right after that happens — a fresh small map each time
+  // is simplest and keeps both markers correctly in view, at the cost of
+  // a brief re-center every time the driver's position updates (~6s).
+  if (ride.driverLiveLat && ride.driverLiveLng) {
+    setTimeout(() => renderLiveRideMap(ride), 30);
+  } else if (liveRideMapInstance) {
+    liveRideMapInstance.remove();
+    liveRideMapInstance = null;
+  }
+
+  tabHome.innerHTML = `
+    <div class="card status-section">
+      <div class="status-badge">${ride.status.replace('_',' ')}</div>
+      <div class="status-icon">${icon}</div>
+      <div class="status-title">${title}</div>
+      <div class="status-sub">${sub}</div>
+      <div class="route-summary">
+        <span class="dot pickup-dot"></span>${ride.pickup}<br>
+        ${(ride.stops && ride.stops.length) ? ride.stops.map(s => `<span class="dot" style="background:var(--river);"></span>${s.label}<br>`).join('') : ''}
+        <span class="dot drop-dot"></span>${ride.destination}<br>
+        <strong>${ride.agreedFare ? 'Agreed fare: ₹' + ride.agreedFare : 'Your offer: ₹' + ride.fareOffer}</strong>
+      </div>
+      ${driverBlock}
+      ${cancelBtn}
+    </div>
+    ${offersBlock}
+  `;
+
+  const cancelEl = document.getElementById('btnCancel');
+  if (cancelEl) cancelEl.addEventListener('click', () => openCancelModal(id));
+}
+
+// ================= IN-RIDE CHAT =================
+// A simple real-time text chat scoped to one ride, stored under
+// rideRequests/{id}/messages. Either side can also share their current GPS
+// location as a tappable Google Maps link — built from free browser
+// geolocation, no maps API or billing involved.
+let activeChatMsgsRef = null;
+
+function openChatModal(id, myRole, otherName) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet" style="display:flex; flex-direction:column; max-height:82vh;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="margin:0;">Chat with ${otherName}</h3>
+        <button id="btnCloseChat" style="background:none; border:none; font-size:22px; color:var(--text-muted); line-height:1;">✕</button>
+      </div>
+      <div id="chatMessages" style="flex:1; overflow-y:auto; min-height:180px; max-height:48vh; display:flex; flex-direction:column; gap:8px; padding:4px 2px;"></div>
+      <div style="display:flex; gap:6px; margin-top:12px;">
+        <button id="btnShareChatLocation" title="Share current location" style="padding:0 14px; border:none; border-radius:8px; background:#F0EBFA; color:var(--purple); font-size:17px;">📍</button>
+        <input id="chatInput" type="text" placeholder="Type a message…" style="flex:1;">
+        <button id="btnSendChat" style="padding:0 18px; border:none; border-radius:8px; background:var(--purple); color:#fff; font-weight:700;">Send</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const msgsContainer = overlay.querySelector('#chatMessages');
+  activeChatMsgsRef = db.ref('rideRequests/' + id + '/messages');
+  activeChatMsgsRef.on('value', snap => {
+    const msgs = snap.val() || {};
+    const sorted = Object.values(msgs).sort((a, b) => a.ts - b.ts);
+    msgsContainer.innerHTML = sorted.length
+      ? sorted.map(m => renderChatBubble(m, myRole)).join('')
+      : '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:24px 10px;">No messages yet — say hello, or share your location if there\'s any confusion finding each other.</div>';
+    msgsContainer.scrollTop = msgsContainer.scrollHeight;
+  });
+
+  function sendChatMessage(text, mapsLink) {
+    if (!text && !mapsLink) return;
+    activeChatMsgsRef.push({ sender: myRole, text: text || '', mapsLink: mapsLink || null, ts: Date.now() });
+  }
+
+  overlay.querySelector('#btnSendChat').addEventListener('click', () => {
+    const input = overlay.querySelector('#chatInput');
+    const text = input.value.trim();
+    if (text) { sendChatMessage(text); input.value = ''; }
+  });
+  overlay.querySelector('#chatInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') overlay.querySelector('#btnSendChat').click();
+  });
+  overlay.querySelector('#btnShareChatLocation').addEventListener('click', () => {
+    if (!navigator.geolocation) { alert('GPS not supported on this device/browser.'); return; }
+    navigator.geolocation.getCurrentPosition(pos => {
+      const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+      sendChatMessage('📍 Shared current location', link);
+    }, () => alert('Could not get your current location. Please check location permission.'));
+  });
+  overlay.querySelector('#btnCloseChat').addEventListener('click', () => {
+    if (activeChatMsgsRef) { activeChatMsgsRef.off(); activeChatMsgsRef = null; }
+    overlay.remove();
+  });
+}
+
+function renderChatBubble(m, myRole) {
+  const isMine = m.sender === myRole;
+  const bubbleBg = isMine ? 'var(--purple)' : '#F0EBFA';
+  const textColor = isMine ? '#fff' : 'var(--text)';
+  const linkColor = isMine ? '#fff' : 'var(--purple)';
+  const linkHtml = m.mapsLink ? `<br><a href="${m.mapsLink}" target="_blank" style="color:${linkColor}; text-decoration:underline; font-weight:700;">Open in Google Maps</a>` : '';
+  const safeText = (m.text || '').replace(/</g, '&lt;');
+  return `<div style="align-self:${isMine ? 'flex-end' : 'flex-start'}; max-width:80%; background:${bubbleBg}; color:${textColor}; padding:9px 13px; border-radius:14px; font-size:14px; line-height:1.4;">${safeText}${linkHtml}</div>`;
+}
+
+function renderOffers(id, offers) {
+  if (!offers) return '';
+  const activeOffers = Object.entries(offers).filter(([driverId, o]) => o.status !== 'rejected');
+  if (activeOffers.length === 0) return '';
+  return `
+    <div class="section-title" style="margin-top:16px;">Driver Offers</div>
+    ${activeOffers.map(([driverId, o]) => {
+      if (o.proposedBy === 'driver' && o.status === 'pending') {
+        return `
+          <div class="card">
+            <div style="font-weight:700;">${o.driverName}</div>
+            <div style="color:var(--text-muted); font-size:13px; margin-bottom:8px;">${o.driverVehicle || ''}</div>
+            <div style="font-size:20px; font-weight:700; color:var(--gold); margin-bottom:10px;">₹${o.amount}</div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-secondary" style="flex:1; padding:10px; border-radius:8px; border:none;" onclick="rejectDriverOffer('${id}','${driverId}')">Decline</button>
+              <button class="btn-purple" style="flex:1; padding:10px; border-radius:8px; border:none;" onclick="acceptDriverOffer('${id}','${driverId}', ${o.amount})">Accept ₹${o.amount}</button>
+            </div>
+            <button style="width:100%; margin-top:8px; background:#F0EBFA; color:var(--purple); border:none; padding:10px; border-radius:8px; font-weight:600;" onclick="openRiderCounter('${id}','${driverId}', this)">Counter Back</button>
+          </div>`;
+      } else if (o.proposedBy === 'rider' && o.status === 'pending') {
+        return `<div class="card"><div style="font-weight:700;">${o.driverName}</div><div style="color:var(--text-muted); font-size:13px;">Waiting for driver's response to your ₹${o.amount} counter…</div></div>`;
+      }
+      return '';
+    }).join('')}
+  `;
+}
+
+function openRiderCounter(id, driverId, btn) {
+  const wrap = document.createElement('div');
+  wrap.style.marginTop = '8px';
+  wrap.innerHTML = `<input type="number" placeholder="Your counter (₹)" style="margin-bottom:6px;" id="riderCounter-${driverId}">
+    <button style="width:100%; background:var(--gold); color:var(--purple-deep); border:none; padding:10px; border-radius:8px; font-weight:700;" onclick="submitRiderCounter('${id}','${driverId}')">Send Counter</button>`;
+  btn.replaceWith(wrap);
+}
+function submitRiderCounter(id, driverId) {
+  const amount = parseFloat(document.getElementById('riderCounter-' + driverId).value);
+  if (!amount || amount <= 0) { alert('Enter a valid amount.'); return; }
+  db.ref(`rideRequests/${id}/offers/${driverId}`).update({ amount, proposedBy: 'rider', status: 'pending', updatedAt: Date.now() });
+}
+function rejectDriverOffer(id, driverId) {
+  db.ref(`rideRequests/${id}/offers/${driverId}`).update({ status: 'rejected', updatedAt: Date.now() });
+}
+function acceptDriverOffer(id, driverId, amount) {
+  db.ref('rideRequests/' + id).transaction(current => {
+    if (current && current.status === 'requested') {
+      const offer = current.offers && current.offers[driverId];
+      current.status = 'accepted';
+      current.driverId = driverId;
+      current.driverName = offer.driverName;
+      current.driverPhone = offer.driverPhone;
+      current.driverVehicle = offer.driverVehicle;
+      current.agreedFare = amount;
+      current.acceptedAt = Date.now();
+      return current;
+    }
+    return current;
+  }, (error, committed) => { if (!committed) alert('This ride was just taken by another driver.'); });
+}
+
+// ================= CANCEL =================
+function openCancelModal(id) {
+  const reasons = ['Driver too far away', 'Changed my mind', 'Booked by mistake', 'Other'];
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <h3>Why are you cancelling?</h3>
+      ${reasons.map(r => `<button class="reason-option" data-reason="${r}">${r}</button>`).join('')}
+      <button class="reason-option" style="text-align:center; color:var(--text-muted); border:none;" id="btnCloseModal">Never mind</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelectorAll('[data-reason]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      db.ref('rideRequests/' + id).update({ status: 'cancelled', cancelReason: btn.dataset.reason, cancelledBy: riderId, cancelledAt: Date.now() });
+      overlay.remove();
+    });
+  });
+  document.getElementById('btnCloseModal').addEventListener('click', () => overlay.remove());
+}
+
+function renderCancelledScreen() {
+  tabHome.innerHTML = `
+    <div class="card status-section">
+      <div class="status-icon">❌</div>
+      <div class="status-title">Request Cancelled</div>
+      <div class="status-sub">You can book a new ride anytime</div>
+      <button class="pill-btn btn-purple" onclick="renderHome()">Book Another Ride</button>
+    </div>`;
+}
+
+// ================= RIDE COMPLETION: rating + payment reminder (modal, not the dashboard) =================
+function openCompletionModal(id, ride) {
+  const fare = ride.agreedFare || ride.fareOffer;
+  let selectedStars = 0;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <div style="text-align:center;">
+        <div style="font-size:38px; margin-bottom:6px;">🎉</div>
+        <h3 style="margin-bottom:4px;">Ride Completed</h3>
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">How was your ride with ${ride.driverName}?</div>
+        <div class="star-row" id="completionStarRow">
+          ${[1,2,3,4,5].map(n => `<span data-val="${n}">★</span>`).join('')}
+        </div>
+      </div>
+      <div style="background:#FFF7E0; border:1px solid #F2D98A; border-radius:10px; padding:12px; margin:14px 0; font-size:13px; color:#6B5000; line-height:1.6;">
+        💵 Please pay <strong>₹${fare}</strong> directly to ${ride.driverName} now — in cash, or by scanning their UPI QR code shown on their phone. GOGUWAHATI does not collect ride fares.
+      </div>
+      <button class="pill-btn btn-purple" id="btnSubmitCompletionRating">Submit Rating</button>
+      <button class="pill-btn btn-flat" style="margin-top:10px;" id="btnSkipCompletionRating">Skip</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const stars = overlay.querySelectorAll('#completionStarRow span');
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedStars = parseInt(star.dataset.val);
+      stars.forEach(s => s.classList.toggle('filled', parseInt(s.dataset.val) <= selectedStars));
+    });
+  });
+
+  function finish() {
+    if (selectedStars > 0) db.ref('rideRequests/' + id).update({ riderRating: selectedStars });
+    overlay.remove();
+  }
+  overlay.querySelector('#btnSubmitCompletionRating').addEventListener('click', finish);
+  overlay.querySelector('#btnSkipCompletionRating').addEventListener('click', finish);
+}
+
+// ================= HISTORY TAB =================
+function renderHistory() {
+  tabHistory.innerHTML = `<div class="card tight"><div class="empty-state">Loading history…</div></div>`;
+  db.ref('rideRequests').orderByChild('riderId').equalTo(riderId).once('value', snapshot => {
+    const all = snapshot.val() || {};
+    const completed = Object.values(all).filter(r => r.status === 'completed').sort((a,b) => (b.completedAt||0) - (a.completedAt||0));
+    if (completed.length === 0) {
+      tabHistory.innerHTML = `<div class="card tight"><div class="empty-state">No past rides yet</div></div>`;
+      return;
+    }
+    tabHistory.innerHTML = `<div class="card tight">
+      ${completed.map(r => `
+        <div class="trip-row">
+          <div class="trip-top">
+            <div style="font-weight:700;">${r.driverName || 'Driver'}</div>
+            <div style="font-weight:700; color:var(--purple);">₹${r.agreedFare || r.fareOffer}</div>
+          </div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${r.pickup} → ${r.destination}</div>
+          <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${new Date(r.completedAt).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'})}${r.riderRating ? ' · ' + '★'.repeat(r.riderRating) : ''}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  });
+}
+
+// ================= MENU TAB =================
+function renderMenu() {
+  if (!riderProfile) { tabMenu.innerHTML = `<div class="card tight empty-state">Loading…</div>`; return; }
+  tabMenu.innerHTML = `
+    <div class="card tight" style="display:flex; gap:14px; align-items:center;">
+      <div style="width:60px; height:60px; border-radius:50%; background:#F0EBFA; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--purple); font-size:22px;">${riderProfile.name.charAt(0)}</div>
+      <div>
+        <div style="font-weight:700; font-size:16px;">${riderProfile.name}</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:2px;">${riderProfile.phone}</div>
+      </div>
+    </div>
+
+    <div class="card tight">
+      <div style="font-weight:700; margin-bottom:10px;">Saved Places</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--card-border);">
+        <div>🏠 Home<br><span style="font-size:12px; color:var(--text-muted);">${riderProfile.homeAddress ? riderProfile.homeAddress.label : 'Not set'}</span></div>
+        <button onclick="openSavedPlaceModal('home')" style="padding:8px 14px; border-radius:16px; border:none; background:#F0EBFA; color:var(--purple); font-weight:600; font-size:12px;">${riderProfile.homeAddress ? 'Edit' : 'Set'}</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+        <div>💼 Work<br><span style="font-size:12px; color:var(--text-muted);">${riderProfile.workAddress ? riderProfile.workAddress.label : 'Not set'}</span></div>
+        <button onclick="openSavedPlaceModal('work')" style="padding:8px 14px; border-radius:16px; border:none; background:#F0EBFA; color:var(--purple); font-weight:600; font-size:12px;">${riderProfile.workAddress ? 'Edit' : 'Set'}</button>
+      </div>
+    </div>
+
+    <div class="card tight">
+      <div style="font-weight:700; margin-bottom:4px;">App Theme</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Choose a background theme for your app</div>
+      <div style="display:flex; gap:14px;" id="themeSwatches">
+        ${Object.keys(THEMES).map(name => `
+          <button data-theme="${name}" title="${name}" style="width:42px; height:42px; border-radius:50%; border:3px solid ${currentTheme === name ? '#241436' : 'transparent'}; background:${THEMES[name].purple}; cursor:pointer;"></button>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card tight">
+      <button class="pill-btn btn-flat" id="btnLogoutRider">Logout</button>
+    </div>
+    <div class="credit-line">GOGUWAHATI by Marak Innovation</div>
+  `;
+  document.querySelectorAll('#themeSwatches button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyTheme(btn.dataset.theme);
+      renderMenu(); // re-render so the selected swatch's border updates
+    });
+  });
+  document.getElementById('btnLogoutRider').addEventListener('click', () => {
+    if (confirm('Logout of your account?')) auth.signOut();
+  });
+}
+
+// A small modal with one address search box, for setting Home or Work.
+function openSavedPlaceModal(which) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <h3>${which === 'home' ? '🏠 Set Home Address' : '💼 Set Work Address'}</h3>
+      <div class="search-wrap" style="margin-top:14px;">
+        <input id="savedPlaceSearch" type="text" placeholder="Type an address…" autocomplete="off">
+        <div id="savedPlaceResults" class="search-results" style="display:none;"></div>
+      </div>
+      <button class="reason-option" style="text-align:center; color:#999; border:none; margin-top:16px;" id="btnCancelSavedPlace">Cancel</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  setupAddressSearch('savedPlaceSearch', 'savedPlaceResults', (lat, lng, label) => {
+    const field = which === 'home' ? 'homeAddress' : 'workAddress';
+    db.ref('riders/' + riderId).update({ [field]: { lat, lng, label } }).then(() => {
+      overlay.remove();
+      renderMenu();
+    });
+  });
+  document.getElementById('btnCancelSavedPlace').addEventListener('click', () => overlay.remove());
+}
+
+// ================= INSTALL / SHARE =================
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showAndroidInstallBannerIfNeeded();
+});
+
+// Auto-appearing install banner for Android — shows the instant Chrome
+// signals the app is installable (e.g., right after scanning the QR code),
+// instead of requiring someone to dig through the header or Menu tab to
+// find the Install button themselves.
+function showAndroidInstallBannerIfNeeded() {
+  if (!deferredInstallPrompt) return;
+  if (localStorage.getItem('gg_android_banner_dismissed') === 'true') return;
+  if (document.getElementById('androidInstallBanner')) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'androidInstallBanner';
+  banner.style.cssText = 'position:fixed; left:12px; right:12px; bottom:86px; z-index:500; background:#fff; border:1px solid #e5e0f0; color:var(--text); border-radius:14px; padding:14px 16px; box-shadow:0 6px 20px rgba(36,20,54,0.18); font-size:13px; line-height:1.5; display:flex; gap:10px; align-items:center;';
+  banner.innerHTML = `
+    <div style="flex:1;"><strong>Install GOGUWAHATI</strong><br>Get it on your home screen — one tap.</div>
+    <button id="btnAndroidBannerInstall" style="background:var(--purple); color:#fff; border:none; padding:9px 16px; border-radius:20px; font-weight:700; font-size:13px; white-space:nowrap;">Install</button>
+    <button id="btnDismissAndroidBanner" style="background:none; border:none; color:var(--purple); font-size:19px; line-height:1; padding:0;">✕</button>
+  `;
+  document.body.appendChild(banner);
+  document.getElementById('btnAndroidBannerInstall').addEventListener('click', async () => {
+    banner.remove();
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+    }
+  });
+  document.getElementById('btnDismissAndroidBanner').addEventListener('click', () => {
+    banner.remove();
+    localStorage.setItem('gg_android_banner_dismissed', 'true');
+  });
+}
+
+function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent); }
+
+// ================= AUTO IOS INSTALL BANNER =================
+// Detects an iPhone/iPad visitor automatically (no need to tap Install
+// first) and shows exact instructions — including the tricky case where
+// they're using Chrome or Firefox on iOS, where "Add to Home Screen" isn't
+// available at all; only Safari can install web apps on iOS.
+function isInStandaloneMode() {
+  return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+}
+function isIOSNonSafariBrowser() {
+  return /CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent);
+}
+function showIOSInstallBannerIfNeeded() {
+  if (!isIOS() || isInStandaloneMode()) return;
+  if (localStorage.getItem('gg_ios_banner_dismissed') === 'true') return;
+
+  const msg = isIOSNonSafariBrowser()
+    ? `<strong>To install:</strong> iPhone only allows installing apps from <strong>Safari</strong>. Copy this link and open it in Safari, then tap Share → "Add to Home Screen".`
+    : `<strong>To install:</strong> Tap the <strong>Share</strong> icon in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.`;
+
+  const banner = document.createElement('div');
+  banner.id = 'iosInstallBanner';
+  banner.style.cssText = 'position:fixed; left:12px; right:12px; bottom:86px; z-index:500; background:#fff; border:1px solid #e5e0f0; color:var(--text); border-radius:14px; padding:14px 16px; box-shadow:0 6px 20px rgba(36,20,54,0.18); font-size:13px; line-height:1.5; display:flex; gap:10px; align-items:flex-start;';
+  banner.innerHTML = `
+    <div style="flex:1;">${msg}</div>
+    <button id="btnDismissIOSBanner" style="background:none; border:none; color:var(--purple); font-size:19px; line-height:1; padding:0;">✕</button>
+  `;
+  document.body.appendChild(banner);
+  document.getElementById('btnDismissIOSBanner').addEventListener('click', () => {
+    banner.remove();
+    localStorage.setItem('gg_ios_banner_dismissed', 'true');
+  });
+}
+showIOSInstallBannerIfNeeded();
+
+function setupInstallShare(installBtnId, shareBtnId) {
+  const installBtn = document.getElementById(installBtnId);
+  const shareBtn = document.getElementById(shareBtnId);
+  if (isIOS() && installBtn) {
+    installBtn.addEventListener('click', () => alert('On iPhone: tap the Share icon in Safari, then "Add to Home Screen".'));
+  } else if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+      } else {
+        alert('App may already be installed. Try the browser menu > "Add to Home screen".');
+      }
+    });
+  }
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      const shareData = { title: 'GOGUWAHATI', text: 'Book rides with GOGUWAHATI!', url: window.location.href };
+      if (navigator.share) { navigator.share(shareData).catch(() => {}); }
+      else { navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!'); }
+    });
+  }
+}
+
+// Manifest is now a real static manifest.json file (see repo root) instead
+// of being generated here at runtime — that runtime/blob approach was set
+// AFTER the page had already loaded, which is very likely why Android was
+// treating this as a plain "website shortcut" (Chrome badge overlay)
+// instead of a properly installed app with a clean icon.
+
+// ================= SERVICE WORKER =================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed:', err));
+}
+</script>
+</body>
+</html>
